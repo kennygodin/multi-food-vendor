@@ -28,12 +28,10 @@ const LoginPage = () => {
       });
       setIsLoading(false);
       if (res?.error) {
-        toast.error(res?.error);
-        return;
+        return toast.error(res?.error);
       }
       toast.success('User logged in');
-
-      router.refresh();
+      router.push('/profile');
     } catch (error) {
       console.log(error);
     }
@@ -79,7 +77,7 @@ const LoginPage = () => {
 
         <div className="flex gap-3">
           <span>Forgot password?</span>
-          <Link href="/" className="underline">
+          <Link href="/pass-reset" className="underline">
             Click here to reset password
           </Link>
         </div>

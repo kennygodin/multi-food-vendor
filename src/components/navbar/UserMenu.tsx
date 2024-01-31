@@ -8,12 +8,12 @@ import Avatar from '../Avatar';
 import MenuItem from './MenuItem';
 
 import { User, Vendor } from '@prisma/client';
-import { signOut } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 
 interface UserMenuProps {
   currentUser?: User | Vendor | null;
 }
-const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
+const UserMenu: React.FC<UserMenuProps> = () => {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
 
@@ -21,11 +21,14 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
     setIsOpen((prev) => !prev);
   }, []);
 
+  const { data, status } = useSession();
+  const image = data?.user?.image;
+
   return (
     <div className="relative">
       <div className="flex items-center gap-3">
         <div onClick={toggle} className="cursor-pointer">
-          <Avatar currentUser={currentUser} />
+          <Avatar image={image} />
         </div>
         <div className="cursor-pointer">
           <BsCart size={20} />
@@ -36,7 +39,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
         <div className="absolute rounded-xl shadow-md w-[40vw] md:w-[20vw] bg-white overflow-hidden right-0 top-12 text-sm">
           <div className="flex flex-col cursor-pointer">
             <>
-              {!currentUser && (
+              {status === 'unauthenticated' && (
                 <MenuItem
                   onClick={() => {
                     router.push('/login'), setIsOpen(false);
@@ -44,7 +47,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
                   label="Login"
                 />
               )}
-              {!currentUser && (
+              {status === 'unauthenticated' && (
                 <MenuItem
                   onClick={() => {
                     router.push('/register'), setIsOpen(false);
@@ -53,7 +56,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
                 />
               )}
 
-              {currentUser && (
+              {status === 'authenticated' && (
                 <MenuItem
                   onClick={() => {
                     router.push('/profile'), setIsOpen(false);
@@ -61,7 +64,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
                   label="Profile"
                 />
               )}
-              {currentUser && (
+              {status === 'authenticated' && (
                 <MenuItem
                   onClick={() => {
                     signOut(), setIsOpen(false);

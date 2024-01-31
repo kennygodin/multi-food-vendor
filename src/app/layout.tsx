@@ -5,8 +5,6 @@ import './globals.css';
 import Navbar from '@/components/navbar/Navbar';
 import { Toaster } from 'react-hot-toast';
 import { AppContext } from '@/components/AppContext';
-import getCurrentUser from '@/actions/getCurrentUser';
-import { User } from '@prisma/client';
 
 const nunito = Nunito({ subsets: ['latin'] });
 
@@ -20,15 +18,12 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const currentUser = await getCurrentUser();
-  console.log(currentUser);
-
   return (
     <html lang="en">
       <body className={nunito.className}>
         <AppContext>
           <Toaster />
-          <Navbar currentUser={currentUser} />
+          <Navbar />
           <div className="pt-14">{children}</div>
         </AppContext>
       </body>

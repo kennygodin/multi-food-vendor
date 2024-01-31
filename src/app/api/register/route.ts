@@ -13,7 +13,7 @@ interface UserData {
 export async function POST(req: Request) {
   const body = await req.json();
   const { token } = body;
-  const cookieToken = cookies().get('activationToken')?.value;
+  const cookieToken = cookies().get('jwt_token')?.value;
 
   if (!cookieToken || !token) {
     return NextResponse.json('Tokens not found!', { status: 404 });
@@ -24,8 +24,9 @@ export async function POST(req: Request) {
       cookieToken,
       process.env.JWT_SECRET as string
     ) as JwtPayload;
+    // return NextResponse.json(decode);
 
-    if (decode.activationString !== token) {
+    if (decode.emailString !== token) {
       return NextResponse.json('Token mismatch!', { status: 400 });
     }
 
@@ -42,7 +43,7 @@ export async function POST(req: Request) {
       }));
 
     if (userExists) {
-      return NextResponse.json('Email already registered!', { status: 400 });
+      return NextResponse.json('Email already registered');
     }
 
     try {
@@ -65,9 +66,10 @@ export async function POST(req: Request) {
           },
         });
       }
-      return NextResponse.json('User has been created.', { status: 201 });
-    } catch (error) {
-      return NextResponse.json('User has been created.', { status: 201 });
+      return NextResponse.json('User has been created', { status: 201 });
+    } catch (error: any) {
+      // throw new Error(error);
+      return NextResponse.json('User has been created');
     }
   } catch (error) {
     return NextResponse.json('Invalid token!', { status: 404 });

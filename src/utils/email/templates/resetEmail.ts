@@ -1,8 +1,8 @@
-export const verifyEmail = `
+export const resetEmail = `
 <!DOCTYPE html>
 <html>
   <head>
-    <title>FoodTroops Activation Email</title>
+    <title>Password Reset Request</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style type="text/css">
@@ -42,11 +42,7 @@ export const verifyEmail = `
         max-width: 600px;
         margin: 0 auto;
       }
-      .email-header {
-        background-color: #ed8936;
-        padding: 24px;
-        color: #ffffff;
-      }
+      
       .email-body {
         padding: 24px;
         background-color: #ffffff;
@@ -71,14 +67,14 @@ export const verifyEmail = `
   </head>
   <body>
     <div class="email-wrapper">
-      <div class="email-header">
-        <h1>Welcome to FoodTroops</h1>
-      </div>
+     
       <div class="email-body">
-        <p>Hello {{name}},</p>
+        <p>Dear {{name}},</p>
         <p>
-          Thank you for joining FoodTroops! To get started, please verify your
-          email address by clicking the link below. The link is valid within 1 hour.
+        We received a request to reset your password. If you did not make this request, you can safely ignore this email.
+        </p>
+        <p>
+        To reset your password, please click on the button below and follow the on-screen instructions to choose a new password.
         </p>
 
         <a href="{{url}}" target="_blank">
@@ -92,14 +88,10 @@ export const verifyEmail = `
               font-weight: bold;
             "
           >
-            Verify Your Email Address
+            Reset password
           </button>
         </a>
 
-        <p style="margin-top: 24px;">
-          If you did not create an account with FoodTroops, please ignore this
-          email.
-        </p>
       </div>
       <div class="email-footer">
         <p>

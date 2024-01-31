@@ -8,6 +8,7 @@ import axios, { AxiosResponse } from 'axios';
 import Container from '@/components/Container';
 import Heading from '@/components/Heading';
 import Button from '@/components/Button';
+import { toast } from 'react-hot-toast';
 
 interface verifyResponse {
   data: string;
@@ -26,7 +27,12 @@ const VerifyUser = () => {
         .post<verifyResponse>('/api/register', { token: paramsToken })
         .then((res: AxiosResponse) => {
           // console.log(res);
-          setVerifiedData(res.data);
+          if (res.data === 'Email already registered') {
+            return toast.error(res.data);
+          }
+          if (res.data === 'User has been created') {
+            setVerifiedData('User has been created');
+          }
         })
         .catch((error: any) => {
           console.error('Error', error);
@@ -43,22 +49,20 @@ const VerifyUser = () => {
           <Heading
             mainTitle={verifyData}
             subTitle={
-              verifyData === 'Invalid token!' || 'Tokens not found!'
-                ? 'Something went wrong. Please register again.'
-                : 'Please log into your account.'
+              verifyData === 'User has been created'
+                ? 'Please log into your account.'
+                : 'Something went wrong. Please register again.'
             }
             center
           />
           <Button
             label={
-              verifyData === 'Invalid token!' || 'Tokens not found!'
-                ? 'Register'
-                : 'Login'
+              verifyData === 'User has been created' ? 'Login.' : 'Register'
             }
             onClick={
-              verifyData === 'Invalid token!'
-                ? () => router.push('/register')
-                : () => router.push('/login')
+              verifyData === 'User has been created'
+                ? () => router.push('/login')
+                : () => router.push('/register')
             }
           />
         </div>

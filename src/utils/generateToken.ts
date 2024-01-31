@@ -1,26 +1,25 @@
+import { User, Vendor } from '@prisma/client';
 import { randomBytes, createHash } from 'crypto';
 import jwt from 'jsonwebtoken';
 import { cookies } from 'next/headers';
 
-interface UserData {
-  name: string;
-  email: string;
-  password: string;
-  role: string;
+interface GeneratedToken {
+  emailString: string;
+  jwtToken: string;
 }
 
-export const generateToken = (user: UserData) => {
-  const token = randomBytes(32).toString('hex') + user.name;
-  const activationString = createHash('sha256').update(token).digest('hex');
-  const activationToken = jwt.sign(
-    { user, activationString },
+export const generateToken = (user: User | Vendor): GeneratedToken => {
+  const randomString = randomBytes(32).toString('hex');
+  const emailString = createHash('sha256').update(randomString).digest('hex');
+  const jwtToken = jwt.sign(
+    { user, emailString },
     process.env.JWT_SECRET as string,
     { expiresIn: '1h' }
   );
 
-  cookies().set('activationToken', activationToken, {
+  cookies().set('jwt_token', jwtToken, {
     secure: true,
     httpOnly: true,
   });
-  return { activationString, activationToken };
+  return { emailString, jwtToken };
 };

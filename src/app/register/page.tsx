@@ -21,15 +21,15 @@ const RegisterPage = () => {
   const register = useCallback(async () => {
     // validation
     if (!name || !email || !password) {
-      return toast.error('Please fill all fields.');
+      return toast.error('Please fill all fields');
     }
 
     if (password.length < 6) {
-      return toast.error('Minimum password length is 6 characters.');
+      return toast.error('Minimum password length is 6 characters');
     }
 
     if (password !== confirmPassword) {
-      return toast.error('Passwords do not match!');
+      return toast.error('Passwords do not match');
     }
 
     try {

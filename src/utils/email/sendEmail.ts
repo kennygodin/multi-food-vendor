@@ -1,6 +1,7 @@
 import transporter from './nodemailerConfig';
 import * as handlebars from 'handlebars';
 import { verifyEmail } from './templates/verifyEmail';
+import { resetEmail } from './templates/resetEmail';
 
 export async function sendEmail({
   to,
@@ -31,6 +32,13 @@ export async function sendEmail({
 
 export function compileVerifyTemplate(name: string, url: string) {
   const template = handlebars.compile(verifyEmail);
+  const htmlBody = template({ name, url });
+
+  return htmlBody;
+}
+
+export function compileResetTemplate(name: string, url: string) {
+  const template = handlebars.compile(resetEmail);
   const htmlBody = template({ name, url });
 
   return htmlBody;

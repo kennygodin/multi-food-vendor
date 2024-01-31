@@ -4,6 +4,7 @@ import prisma from '@/utils/prismadb';
 
 import { compileVerifyTemplate, sendEmail } from '@/utils/email/sendEmail';
 import { generateToken } from '@/utils/generateToken';
+import { User, Vendor } from '@prisma/client';
 
 interface UserData {
   name: string;
@@ -33,21 +34,26 @@ export async function POST(req: Request) {
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
-  const userData: UserData = { name, email, password: hashedPassword, role };
+  const userData: User | Vendor | any = {
+    name,
+    email,
+    password: hashedPassword,
+    role,
+  };
 
   // generate token
   const token = generateToken(userData);
   const frontendUrl = process.env.FRONTEND_URL;
-  const verifyUrl = `${frontendUrl}verify-user?token=${token.activationString}`;
+  const emailUrl = `${frontendUrl}verify-user?token=${token.emailString}`;
 
-  // console.log(verifyUrl);
+  // console.log(emailUrl);
   const subject = 'Welcome to FoodTroops - Verify Your Email Address';
   try {
     await sendEmail({
       to: email,
       name,
       subject,
-      body: compileVerifyTemplate(name, verifyUrl),
+      body: compileVerifyTemplate(name, emailUrl),
     });
   } catch (error) {
     console.log(error);
