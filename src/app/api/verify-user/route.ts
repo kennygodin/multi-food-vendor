@@ -4,37 +4,25 @@ import prisma from '@/utils/prismadb';
 
 import { compileVerifyTemplate, sendEmail } from '@/utils/email/sendEmail';
 import { generateToken } from '@/utils/generateToken';
-import { User, Vendor } from '@prisma/client';
+import { User } from '@prisma/client';
 
-interface UserData {
-  name: string;
-  email: string;
-  password: string;
-  role: string;
-}
 export async function POST(req: Request) {
   const body = await req.json();
   const { name, email, role, password } = body;
 
   // user exists
-  const userExists =
-    (await prisma.user.findUnique({
-      where: {
-        email,
-      },
-    })) ||
-    (await prisma.vendor.findUnique({
-      where: {
-        email,
-      },
-    }));
+  const userExists = await prisma.user.findUnique({
+    where: {
+      email,
+    },
+  });
 
   if (userExists) {
     return NextResponse.json('Email already registered!');
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
-  const userData: User | Vendor | any = {
+  const userData: User | any = {
     name,
     email,
     password: hashedPassword,

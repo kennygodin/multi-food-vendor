@@ -15,7 +15,7 @@ const RegisterPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [role, setRole] = useState('customer');
+  const [role, setRole] = useState('CUSTOMER');
   const [isLoading, setIsLoading] = useState(false);
 
   const register = useCallback(async () => {
@@ -64,22 +64,22 @@ const RegisterPage = () => {
     <Container>
       <div className="max-w-xl mx-auto bg-gray-200 shadow-md rounded-lg mt-8 p-5 flex flex-col gap-2">
         <Heading
-          mainTitle="Welcome to FoodTroops!"
-          subTitle="Embark on a delightful journey of culinary exploration. "
+          mainTitle="Welcome to FoodTroops"
+          subTitle="Embark on a delightful journey of culinary exploration"
         />
         <div className="flex gap-3">
           <Button
             label="Join as Customer"
             small
-            onClick={() => setRole('customer')}
-            outline={role === 'customer' ? false : true}
+            onClick={() => setRole('CUSTOMER')}
+            outline={role === 'CUSTOMER' ? false : true}
             disabled={isLoading}
           />
           <Button
             label="Join as a Vendor"
             small
-            onClick={() => setRole('vendor')}
-            outline={role === 'vendor' ? false : true}
+            onClick={() => setRole('VENDOR')}
+            outline={role === 'VENDOR' ? false : true}
             disabled={isLoading}
           />
         </div>
@@ -87,7 +87,7 @@ const RegisterPage = () => {
           id="name"
           value={name}
           onChange={(e: any) => setName(e.target.value)}
-          label={role === 'customer' ? 'Name' : 'Business Name'}
+          label={role === 'CUSTOMER' ? 'Name' : 'Vendor name'}
           type="text"
           disabled={isLoading}
         />
@@ -95,7 +95,7 @@ const RegisterPage = () => {
           id="email"
           value={email}
           onChange={(e: any) => setEmail(e.target.value)}
-          label={role === 'customer' ? 'Email' : 'Admin Email'}
+          label={role === 'CUSTOMER' ? 'Email' : 'Admin email'}
           type="email"
           disabled={isLoading}
         />

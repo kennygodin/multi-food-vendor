@@ -8,8 +8,25 @@ import Avatar from '@/components/Avatar';
 import Button from '@/components/Button';
 import UserTabs from '@/components/user/UserTabs';
 
+import { useEffect } from 'react';
+import axios from 'axios';
+
 const ProfilePage = () => {
+  useEffect(() => {
+    async function getCurrentUser() {
+      try {
+        await axios.get('/api/profile').then((res) => {
+          console.log(res.data);
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    getCurrentUser();
+  }, []);
+
   const { data, status } = useSession();
+  console.log(data);
   return (
     <Container>
       <div className="max-w-3xl mx-auto mt-8 flex flex-col items-center">

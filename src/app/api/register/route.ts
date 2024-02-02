@@ -3,13 +3,6 @@ import { NextResponse } from 'next/server';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import prisma from '@/utils/prismadb';
 
-interface UserData {
-  name: string;
-  email: string;
-  password: string;
-  role: string;
-}
-
 export async function POST(req: Request) {
   const body = await req.json();
   const { token } = body;
@@ -30,45 +23,28 @@ export async function POST(req: Request) {
       return NextResponse.json('Token mismatch!', { status: 400 });
     }
 
-    const user: UserData = decode.user;
+    const user = decode.user;
 
-    const userExists =
-      (await prisma.user.findUnique({
-        where: { email: user.email },
-      })) ||
-      (await prisma.vendor.findUnique({
-        where: {
-          email: user.email,
-        },
-      }));
+    const userExists = await prisma.user.findUnique({
+      where: { email: user.email },
+    });
 
     if (userExists) {
       return NextResponse.json('Email already registered');
     }
 
     try {
-      if (user.role === 'customer') {
-        await prisma.user.create({
-          data: {
-            name: user.name,
-            email: user.email,
-            password: user.password,
-          },
-        });
-      }
+      await prisma.user.create({
+        data: {
+          name: user.name,
+          email: user.email,
+          password: user.password,
+          role: user.role,
+        },
+      });
 
-      if (user.role === 'vendor') {
-        await prisma.vendor.create({
-          data: {
-            businessName: user.name,
-            email: user.email,
-            password: user.password,
-          },
-        });
-      }
       return NextResponse.json('User has been created', { status: 201 });
     } catch (error: any) {
-      // throw new Error(error);
       return NextResponse.json('User has been created');
     }
   } catch (error) {

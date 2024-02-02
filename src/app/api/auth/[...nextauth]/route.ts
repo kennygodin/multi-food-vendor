@@ -1,5 +1,5 @@
 import { PrismaAdapter } from '@auth/prisma-adapter';
-import NextAuth, { AuthOptions, getServerSession } from 'next-auth';
+import NextAuth, { AuthOptions } from 'next-auth';
 import prisma from '@/utils/prismadb';
 import GoogleProvider from 'next-auth/providers/google';
 import CredentialsProvider from 'next-auth/providers/credentials';
@@ -27,17 +27,11 @@ export const authOptions: AuthOptions = {
         }
 
         // Find an login any user
-        const user =
-          (await prisma.user.findUnique({
-            where: {
-              email: credentials?.email,
-            },
-          })) ||
-          (await prisma.vendor.findUnique({
-            where: {
-              email: credentials?.email,
-            },
-          }));
+        const user = await prisma.user.findUnique({
+          where: {
+            email: credentials?.email,
+          },
+        });
 
         if (!user) {
           throw new Error('Email not registered');
@@ -50,7 +44,7 @@ export const authOptions: AuthOptions = {
         if (user && !passwordIsOk) {
           throw new Error('Invalid email or password');
         }
-        console.log(user);
+        // console.log(user);
         return user;
       },
     }),

@@ -7,13 +7,9 @@ import { BsCart } from 'react-icons/bs';
 import Avatar from '../Avatar';
 import MenuItem from './MenuItem';
 
-import { User, Vendor } from '@prisma/client';
 import { signOut, useSession } from 'next-auth/react';
 
-interface UserMenuProps {
-  currentUser?: User | Vendor | null;
-}
-const UserMenu: React.FC<UserMenuProps> = () => {
+const UserMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
 
