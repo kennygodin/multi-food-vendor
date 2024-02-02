@@ -3,7 +3,7 @@ import { getServerSession } from 'next-auth';
 import { NextResponse } from 'next/server';
 import { authOptions } from '../auth/[...nextauth]/route';
 
-export async function GET(req: Response) {
+export async function GET(req: Request) {
   const session = await getServerSession(authOptions);
 
   if (!session) {
@@ -15,17 +15,32 @@ export async function GET(req: Response) {
     return null;
   }
 
-  const user =
-    (await prisma.user.findUnique({
-      where: { email },
-    })) ||
-    (await prisma.vendor.findUnique({
-      where: { email },
-    }));
+  const user = await prisma.user.findUnique({
+    where: { email },
+  });
 
-  // if("businessName" in user ) { alter the db to use just one user
+  if (!user) {
+    return NextResponse.json('User not found', { status: 404 });
+  }
 
-  // }
+  return NextResponse.json(user);
+}
 
-  return NextResponse.json(session);
+export async function PUT(req: Request) {
+  const body = await req.json();
+  const { name, email, phoneNumber, address, state, country, postalCode } =
+    body;
+  const updatedUser = await prisma.user.update({
+    where: { email },
+    data: {
+      name,
+      phoneNumber,
+      address,
+      state,
+      country,
+      postalCode,
+    },
+  });
+
+  return NextResponse.json({ updatedUser });
 }
