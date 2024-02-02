@@ -117,19 +117,21 @@ const PasswordReset = () => {
             disabled={isLoading}
           />
         )}
-        <Button
-          label={paramsToken ? 'Update Password' : 'Send Email'}
-          onClick={paramsToken ? passSubmit : passReset}
-          disabled={isLoading}
-        />
-        {!paramsToken && (
+        <div className="flex flex-col mt-2 gap-2">
           <Button
-            label="Back to Login"
-            outline
-            onClick={() => router.push('/login')}
+            label={paramsToken ? 'Update Password' : 'Send Email'}
+            onClick={paramsToken ? passSubmit : passReset}
             disabled={isLoading}
           />
-        )}
+          {!paramsToken && (
+            <Button
+              label="Back to Login"
+              outline
+              onClick={() => router.push('/login')}
+              disabled={isLoading}
+            />
+          )}{' '}
+        </div>
       </div>
     </Container>
   );

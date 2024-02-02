@@ -62,7 +62,7 @@ const RegisterPage = () => {
   }, [name, email, role, password, confirmPassword]);
   return (
     <Container>
-      <div className="max-w-xl mx-auto bg-gray-200 shadow-md rounded-lg mt-8 py-5 px-5 flex flex-col gap-3">
+      <div className="max-w-xl mx-auto bg-gray-200 shadow-md rounded-lg mt-8 p-5 flex flex-col gap-2">
         <Heading
           mainTitle="Welcome to FoodTroops!"
           subTitle="Embark on a delightful journey of culinary exploration. "
@@ -116,13 +116,15 @@ const RegisterPage = () => {
           disabled={isLoading}
         />
 
-        <Button
-          label="Sign in with Google"
-          disabled={isLoading}
-          outline
-          icon={FcGoogle}
-        />
-        <Button label="Register" onClick={register} disabled={isLoading} />
+        <div className="mt-2 flex flex-col gap-2">
+          <Button
+            label="Sign in with Google"
+            disabled={isLoading}
+            outline
+            icon={FcGoogle}
+          />
+          <Button label="Register" onClick={register} disabled={isLoading} />
+        </div>
       </div>
     </Container>
   );

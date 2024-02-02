@@ -39,7 +39,7 @@ const LoginPage = () => {
 
   return (
     <Container>
-      <div className="max-w-xl mx-auto bg-gray-200 shadow-md rounded-lg mt-8 py-5 px-3 flex flex-col gap-3">
+      <div className="max-w-xl mx-auto bg-gray-200 shadow-md rounded-lg mt-8 p-5 flex flex-col gap-2">
         <Heading
           mainTitle="Welcome back to FoodTroops"
           subTitle="Log in to continue your culinary adventure"
@@ -66,14 +66,16 @@ const LoginPage = () => {
           disabled={isLoading}
         />
 
-        <Button
-          label="Sign in with Google"
-          outline
-          icon={FcGoogle}
-          disabled={isLoading}
-          // onClick={() => signIn('google')}
-        />
-        <Button label="Login" onClick={login} disabled={isLoading} />
+        <div className="mt-2 flex flex-col gap-2">
+          <Button
+            label="Sign in with Google"
+            outline
+            icon={FcGoogle}
+            disabled={isLoading}
+            // onClick={() => signIn('google')}
+          />
+          <Button label="Login" onClick={login} disabled={isLoading} />
+        </div>
 
         <div className="flex gap-3">
           <span>Forgot password?</span>
