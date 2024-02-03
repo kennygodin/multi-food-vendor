@@ -28,12 +28,21 @@ export async function GET(req: Request) {
 
 export async function PUT(req: Request) {
   const body = await req.json();
-  const { name, email, phoneNumber, address, state, country, postalCode } =
-    body;
+  const {
+    name,
+    email,
+    image,
+    phoneNumber,
+    address,
+    state,
+    country,
+    postalCode,
+  } = body;
   const updatedUser = await prisma.user.update({
     where: { email },
     data: {
       name,
+      image,
       phoneNumber,
       address,
       state,

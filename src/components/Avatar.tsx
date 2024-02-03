@@ -10,7 +10,7 @@ interface AvatarProps {
 const Avatar: React.FC<AvatarProps> = ({ image, tab }) => {
   return (
     <Image
-      className={tab ? 'rounded-md' : 'rounded-full'}
+      className={tab ? 'rounded-md object-cover' : 'rounded-full'}
       src={image || '/images/placeholder.jpg'}
       height={tab ? 120 : 30}
       width={tab ? 120 : 30}
