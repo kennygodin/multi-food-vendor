@@ -8,7 +8,7 @@ import { toast } from 'react-hot-toast';
 import Container from '@/components/Container';
 import Heading from '@/components/Heading';
 import Input from '@/components/Input';
-import Button from '@/components/Button';
+import Button from '@/components/buttons/Button';
 
 const PasswordReset = () => {
   const [email, setEmail] = useState('');

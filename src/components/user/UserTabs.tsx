@@ -1,35 +1,45 @@
 import NavLinksItem from '../navbar/NavLinksItem';
 import { usePathname } from 'next/navigation';
 
-const UserTabs = () => {
+interface UserTabsProps {
+  role: null | string;
+}
+
+const UserTabs: React.FC<UserTabsProps> = ({ role }) => {
   const currentPath = usePathname();
-  //   console.log(currentPath);
+  // console.log(role);
   return (
     <div className="flex gap-3 items-center">
       <NavLinksItem
         tab
         label="Profile"
         path={currentPath === '/profile'}
-        url=""
+        url="/profile"
       />
-      <NavLinksItem
-        tab
-        label="Categories"
-        path={currentPath === '/categories'}
-        url=""
-      />
-      <NavLinksItem
-        tab
-        label="Menu Items"
-        path={currentPath === '/menu-items'}
-        url=""
-      />
-      <NavLinksItem
-        tab
-        label="Orders"
-        path={currentPath === '/orders'}
-        url=""
-      />
+      {role === 'VENDOR' && (
+        <NavLinksItem
+          tab
+          label="Categories"
+          path={currentPath === '/categories'}
+          url="/categories"
+        />
+      )}
+      {role === 'VENDOR' && (
+        <NavLinksItem
+          tab
+          label="Menu Items"
+          path={currentPath === '/menu-items'}
+          url="/menu-items"
+        />
+      )}
+      {role === 'VENDOR' && (
+        <NavLinksItem
+          tab
+          label="Orders"
+          path={currentPath === '/orders'}
+          url="/orders"
+        />
+      )}
     </div>
   );
 };

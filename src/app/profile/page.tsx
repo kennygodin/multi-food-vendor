@@ -3,12 +3,14 @@
 import Container from '@/components/Container';
 import Input from '@/components/Input';
 import Avatar from '@/components/Avatar';
-import Button from '@/components/Button';
+import Button from '@/components/buttons/Button';
 import UserTabs from '@/components/user/UserTabs';
 
 import { useCallback, useEffect, useState } from 'react';
 import axios, { AxiosResponse } from 'axios';
 import { toast } from 'react-hot-toast';
+import Loader from '@/components/Loader';
+import Image from 'next/image';
 
 const ProfilePage = () => {
   const [name, setName] = useState('');
@@ -20,6 +22,7 @@ const ProfilePage = () => {
   const [country, setCountry] = useState('');
   const [postalCode, setPostalCode] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [role, setRole] = useState<null | string>(null);
 
   const handleImageChange = useCallback(async (e: any) => {
     const image = e.target.files[0];
@@ -99,7 +102,7 @@ const ProfilePage = () => {
           setState(userData?.state);
           setCountry(userData?.country);
           setPostalCode(userData?.postalCode);
-          // console.log(userData);
+          setRole(userData?.role);
           setIsLoading(false);
         });
       } catch (error) {
@@ -110,18 +113,17 @@ const ProfilePage = () => {
   }, []);
 
   if (isLoading) {
-    return 'Loading...';
+    return <Loader />;
   }
 
   return (
     <Container>
       <div className="max-w-3xl mx-auto mt-8 flex flex-col items-center">
-        <UserTabs />
+        <UserTabs role={role} />
         <div className="w-[80%] mt-8 bg-neutral-200 p-10 rounded-lg">
           <div className="flex items-start gap-3 mb-2">
             <div className="flex flex-col gap-1">
               <Avatar image={image} tab />
-
               <label className="flex items-center justify-center">
                 <input
                   type="file"

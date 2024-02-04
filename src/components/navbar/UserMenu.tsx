@@ -24,6 +24,7 @@ const UserMenu = () => {
     <div className="relative">
       <div className="flex items-center gap-3">
         <div onClick={toggle} className="cursor-pointer">
+          <div className="w-[10px] h-[10px]"></div>
           <Avatar image={image} />
         </div>
         <div className="cursor-pointer">

@@ -8,6 +8,7 @@ interface ButtonProps {
   disabled?: boolean;
   outline?: boolean;
   small?: boolean;
+  addBtn?: boolean;
   icon?: IconType;
 }
 
@@ -17,6 +18,7 @@ const Button: React.FC<ButtonProps> = ({
   disabled,
   outline,
   small,
+  addBtn,
   icon: Icon,
 }) => {
   return (
@@ -30,7 +32,7 @@ const Button: React.FC<ButtonProps> = ({
     rounded-lg
     hover:opacity-80
     transition
-    w-full
+    
     border
     ${outline ? 'bg-white' : 'bg-green-500'}
     ${outline ? 'border-black' : 'border-white'}
@@ -38,7 +40,8 @@ const Button: React.FC<ButtonProps> = ({
     ${small ? 'py-1' : 'py-2'}
     ${small ? 'text-sm' : 'text-base'}
     ${small ? 'font-light' : 'font-semibold'}
-   
+    ${addBtn ? '' : 'w-full'}
+    ${addBtn ? 'px-4' : ''}
   `}
     >
       {Icon && <Icon size={24} className="absolute left-4 top-2" />}

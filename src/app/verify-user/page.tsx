@@ -7,7 +7,7 @@ import axios, { AxiosResponse } from 'axios';
 
 import Container from '@/components/Container';
 import Heading from '@/components/Heading';
-import Button from '@/components/Button';
+import Button from '@/components/buttons/Button';
 import { toast } from 'react-hot-toast';
 
 interface verifyResponse {
