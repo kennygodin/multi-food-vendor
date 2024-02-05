@@ -9,13 +9,17 @@ export async function PUT(
   const { categoryName } = body;
   const id = params.id;
 
-  const updatedCategoryName = await prisma.category.update({
-    where: {
-      id,
-    },
-    data: { categoryName },
-  });
-  return NextResponse.json(updatedCategoryName);
+  try {
+    const updatedCategoryName = await prisma.category.update({
+      where: {
+        id,
+      },
+      data: { categoryName },
+    });
+    return NextResponse.json(updatedCategoryName);
+  } catch (error) {
+    return NextResponse.error();
+  }
 }
 
 export async function DELETE(
@@ -24,8 +28,12 @@ export async function DELETE(
 ) {
   const id = params.id;
 
-  const deletedCategory = await prisma.category.delete({
-    where: { id },
-  });
-  return NextResponse.json(deletedCategory);
+  try {
+    const deletedCategory = await prisma.category.delete({
+      where: { id },
+    });
+    return NextResponse.json(deletedCategory);
+  } catch (error) {
+    return NextResponse.error();
+  }
 }

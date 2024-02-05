@@ -1,6 +1,6 @@
 interface InputProps {
   id: string;
-  value: string;
+  value: string | number;
   onChange: any;
   label: string;
   type?: string;

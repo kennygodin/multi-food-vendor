@@ -16,14 +16,18 @@ export async function POST(req: Request) {
     return NextResponse.error();
   }
 
-  const category = await prisma.category.create({
-    data: {
-      categoryName,
-      userId: currentUser?.id,
-    },
-  });
+  try {
+    const category = await prisma.category.create({
+      data: {
+        categoryName,
+        userId: currentUser?.id,
+      },
+    });
 
-  return NextResponse.json(category);
+    return NextResponse.json(category, { status: 201 });
+  } catch (error) {
+    return NextResponse.error();
+  }
 }
 
 export async function GET(req: Request) {

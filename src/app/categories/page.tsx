@@ -6,7 +6,7 @@ import axios, { AxiosResponse } from 'axios';
 
 import Button from '@/components/buttons/Button';
 import Container from '@/components/Container';
-import Input from '@/components/Input';
+import Input from '@/components/inputs/Input';
 import UserTabs from '@/components/user/UserTabs';
 import { Category } from '@prisma/client';
 import Loader from '@/components/Loader';
@@ -36,16 +36,40 @@ const CategoriesPage = () => {
 
   const submitCategoryName = useCallback(async () => {
     try {
-      if (selectedCatId && updateMode) {
-        await axios.put(`/api/categories/${selectedCatId}`, { categoryName });
-        toast.success('Category updated');
-        setUpdateMode(false);
-      } else {
-        await axios.post('/api/categories', { categoryName });
-        toast.success('Category added');
-      }
-      setCategoryName('');
-      getCategories();
+      const submitCatNamePromise = new Promise(async (resolve, reject) => {
+        if (selectedCatId && updateMode) {
+          const res = await axios.put(`/api/categories/${selectedCatId}`, {
+            categoryName,
+          });
+          if (res.status === 200) {
+            resolve(res.data);
+          } else {
+            reject();
+          }
+
+          toast.promise(submitCatNamePromise, {
+            loading: 'Updating category',
+            success: 'Category updated',
+            error: 'Something went wrong!',
+          });
+          setUpdateMode(false);
+        } else {
+          const res = await axios.post('/api/categories', { categoryName });
+          if (res.data) {
+            resolve(res.data);
+          } else {
+            reject();
+          }
+
+          toast.promise(submitCatNamePromise, {
+            loading: 'Adding new category',
+            success: 'Category added',
+            error: 'Something went wrong!',
+          });
+        }
+        setCategoryName('');
+        getCategories();
+      });
     } catch (error) {
       toast.error('You are not an VENDOR');
       console.log(error);
@@ -100,7 +124,7 @@ const CategoriesPage = () => {
     <Container>
       <div className="max-w-3xl mx-auto mt-8 flex flex-col items-center">
         <UserTabs role={role} />
-        <div className="w-[80%] mt-8 bg-neutral-200 p-10 rounded-lg shadow-sm">
+        <div className="w-[80%] mt-8 bg-neutral-200 p-10 rounded-lg">
           <div className="flex gap-3">
             <Input
               id="category"

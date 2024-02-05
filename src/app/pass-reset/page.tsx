@@ -7,7 +7,7 @@ import { toast } from 'react-hot-toast';
 
 import Container from '@/components/Container';
 import Heading from '@/components/Heading';
-import Input from '@/components/Input';
+import Input from '@/components/inputs/Input';
 import Button from '@/components/buttons/Button';
 
 const PasswordReset = () => {

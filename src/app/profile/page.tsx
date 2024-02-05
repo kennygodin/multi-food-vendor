@@ -1,21 +1,20 @@
 'use client';
 
 import Container from '@/components/Container';
-import Input from '@/components/Input';
-import Avatar from '@/components/Avatar';
+import Input from '@/components/inputs/Input';
 import Button from '@/components/buttons/Button';
 import UserTabs from '@/components/user/UserTabs';
+import ImageInput from '@/components/inputs/ImageInput';
+import Loader from '@/components/Loader';
 
 import { useCallback, useEffect, useState } from 'react';
 import axios, { AxiosResponse } from 'axios';
 import { toast } from 'react-hot-toast';
-import Loader from '@/components/Loader';
-import Image from 'next/image';
 
 const ProfilePage = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState<null | string>('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [address, setAddress] = useState('');
   const [state, setState] = useState('');
@@ -23,39 +22,6 @@ const ProfilePage = () => {
   const [postalCode, setPostalCode] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [role, setRole] = useState<null | string>(null);
-
-  const handleImageChange = useCallback(async (e: any) => {
-    const image = e.target.files[0];
-    const formData = new FormData();
-
-    formData.append('file', image);
-    formData.append('upload_preset', 'multi-food-vendor');
-
-    try {
-      const imageUploadPromise = new Promise(async (resolve, reject) => {
-        const res = await axios.post(
-          'https://api.cloudinary.com/v1_1/kencodin/image/upload',
-          formData
-        );
-
-        const imageLink = res.data?.secure_url;
-        if (imageLink) {
-          setImage(imageLink);
-          resolve(imageLink);
-        } else {
-          reject();
-        }
-
-        toast.promise(imageUploadPromise, {
-          loading: 'Uploading image',
-          success: 'Image uploaded',
-          error: 'Something went wrong!',
-        });
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
 
   const updateProfile = useCallback(() => {
     try {
@@ -107,6 +73,7 @@ const ProfilePage = () => {
         });
       } catch (error) {
         console.log(error);
+        setIsLoading(false);
       }
     }
     getCurrentUser();
@@ -123,17 +90,7 @@ const ProfilePage = () => {
         <div className="w-[80%] mt-8 bg-neutral-200 p-10 rounded-lg">
           <div className="flex items-start gap-3 mb-2">
             <div className="flex flex-col gap-1">
-              <Avatar image={image} tab />
-              <label className="flex items-center justify-center">
-                <input
-                  type="file"
-                  className="hidden"
-                  onChange={handleImageChange}
-                />
-                <span className="bg-white border-black rounded-lg text-black p-1 text-sm font-light  hover:opacity-80 transition w-full border cursor-pointer text-center">
-                  Edit image
-                </span>
-              </label>
+              <ImageInput link={image} setLink={setImage} />
             </div>
             <div className="w-full flex flex-col gap-2">
               <Input

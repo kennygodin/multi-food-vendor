@@ -3,7 +3,7 @@
 import Button from '@/components/buttons/Button';
 import Container from '@/components/Container';
 import Heading from '@/components/Heading';
-import Input from '@/components/Input';
+import Input from '@/components/inputs/Input';
 
 import { FcGoogle } from 'react-icons/fc';
 import { signIn } from 'next-auth/react';
