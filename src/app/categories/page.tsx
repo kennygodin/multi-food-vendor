@@ -21,7 +21,19 @@ const CategoriesPage = () => {
   const [selectedCatId, setSelectedCatId] = useState<string | null>(null);
   const [role, setRole] = useState<null | string>(null);
 
-  // get all categories
+  const getCurrentUser = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      await axios.get('/api/profile').then((res: AxiosResponse) => {
+        const userData = res.data;
+        setRole(userData?.role);
+        setIsLoading(false);
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
   const getCategories = useCallback(async () => {
     setIsLoading(true);
     try {
@@ -71,7 +83,7 @@ const CategoriesPage = () => {
         getCategories();
       });
     } catch (error) {
-      toast.error('You are not an VENDOR');
+      toast.error('You are not a VENDOR');
       console.log(error);
     }
   }, [categoryName, selectedCatId, updateMode, getCategories]);
@@ -93,19 +105,6 @@ const CategoriesPage = () => {
     setUpdateMode(true);
     setCategoryName(name);
     setSelectedCatId(id);
-  }, []);
-
-  const getCurrentUser = useCallback(async () => {
-    setIsLoading(true);
-    try {
-      await axios.get('/api/profile').then((res: AxiosResponse) => {
-        const userData = res.data;
-
-        setRole(userData?.role);
-      });
-    } catch (error) {
-      console.log(error);
-    }
   }, []);
 
   useEffect(() => {

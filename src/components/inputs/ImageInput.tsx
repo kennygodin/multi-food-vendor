@@ -48,7 +48,7 @@ const ImageInput: React.FC<ImageInputProps> = ({ link, setLink }) => {
   );
   return (
     <>
-      <Avatar image={link} tab />
+      {link ? <Avatar image={link} tab /> : <div>No image</div>}
       <label className="flex items-center justify-center">
         <input type="file" className="hidden" onChange={handleImageChange} />
         <span className="bg-white border-black rounded-lg text-black p-1 text-sm font-light  hover:opacity-80 transition w-full border cursor-pointer text-center">

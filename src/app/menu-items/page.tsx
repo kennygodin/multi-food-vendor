@@ -5,13 +5,23 @@ import Container from '@/components/Container';
 import Button from '@/components/buttons/Button';
 import Input from '@/components/inputs/Input';
 import UserTabs from '@/components/user/UserTabs';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import Loader from '@/components/Loader';
-import { Category } from '@prisma/client';
+import { Category, MenuItem } from '@prisma/client';
 import ImageInput from '@/components/inputs/ImageInput';
 
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
+import RestrictedPage from '@/components/user/RestrictedPage';
+import Heading from '@/components/Heading';
+import Image from 'next/image';
+import MenuCard from '@/components/menu/MenuCard';
+import { IoMdArrowRoundBack } from 'react-icons/io';
+import MenuInput from '@/components/menu/MenuInput';
+
+interface MenuItemWithUser extends MenuItem {
+  user: { name: string };
+}
 
 const MenuItemsPage = () => {
   const [menuItemName, setMenuItemName] = useState('');
@@ -21,7 +31,50 @@ const MenuItemsPage = () => {
 
   const [selectedOption, setSelectedOption] = useState('');
   const [categories, setCategories] = useState([]);
+  const [menuItems, setMenuItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [vendorName, setVendorName] = useState('');
+  const [role, setRole] = useState(null);
+  const [addedMode, setAddedMode] = useState(false);
+
+  const getCurrentUser = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      setIsLoading(true);
+      await axios.get('/api/profile').then((res: AxiosResponse) => {
+        const userData = res.data;
+
+        setRole(userData?.role);
+        setIsLoading(false);
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
+  const getCategories = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      await axios.get('/api/categories').then((res) => {
+        setCategories(res.data);
+        setIsLoading(false);
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
+  const getMenuItems = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      await axios.get('/api/menu-items').then((res) => {
+        setMenuItems(res.data);
+        setIsLoading(false);
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
 
   const submitMenuItemName = useCallback(async () => {
     try {
@@ -35,6 +88,13 @@ const MenuItemsPage = () => {
         });
         if (res.status === 201) {
           resolve(res.data);
+          setMenuItemName('');
+          setDescription('');
+          setPrice(null);
+          setImage(null);
+          setSelectedOption('');
+          getMenuItems();
+          setAddedMode(true);
         } else {
           reject();
         }
@@ -46,82 +106,81 @@ const MenuItemsPage = () => {
       });
     } catch (error) {
       console.log(error);
+      setIsLoading(false);
     }
-  }, [menuItemName, description, price, image, selectedOption]);
-
-  const handleSelectChange = useCallback((e: any) => {
-    setSelectedOption(e.target.value);
-  }, []);
+  }, [menuItemName, description, price, image, getMenuItems, selectedOption]);
 
   useEffect(() => {
-    async function getCategories() {
-      try {
-        setIsLoading(true);
-        await axios.get('/api/categories').then((res) => {
-          setCategories(res.data);
-          setIsLoading(false);
-        });
-      } catch (error) {
-        console.log(error);
-      }
-    }
-
+    getCurrentUser();
     getCategories();
-  }, []);
+    getMenuItems();
+  }, [getCurrentUser, getCategories, getMenuItems]);
 
   if (isLoading) {
     return <Loader />;
+  }
+
+  if (role !== 'VENDOR') {
+    return <RestrictedPage role={role} />;
   }
 
   return (
     <Container>
       <div className="max-w-3xl mx-auto flex flex-col items-center mt-8">
         <UserTabs role={'VENDOR'} />
-        <div className="w-[80%] mt-8 bg-neutral-200 p-10 rounded-lg">
-          <div className="flex items-start gap-3 mb-2">
-            <div className="flex flex-col gap-1">
-              <ImageInput link={image} setLink={setImage} />
-            </div>
-            <div className="grow flex flex-col gap-3">
-              <Input
-                id="menuItemName"
-                value={menuItemName}
-                onChange={(e: any) => setMenuItemName(e.target.value)}
-                label="Menu name"
-              />
-              <Input
-                id="description"
-                value={description}
-                onChange={(e: any) => setDescription(e.target.value)}
-                label="Short description of menu"
-              />
-              <Input
-                id="price"
-                value={price === null ? '' : String(price)}
-                onChange={(e: any) => {
-                  const inputValue = e.target.value;
-                  setPrice(inputValue === '' ? null : parseInt(inputValue, 10));
-                }}
-                label="Menu price"
-              />
-
-              <select
-                className="p-2 rounded-md"
-                id="category"
-                value={selectedOption}
-                onChange={handleSelectChange}
-              >
-                <option value="">Select category</option>
-                {categories.map((cat: Category) => (
-                  <option key={cat.id} value={cat.id}>
-                    {cat.categoryName}
-                  </option>
+        <div
+          className={`w-[80%] mt-8 ${
+            !addedMode && 'bg-neutral-200'
+          } p-5 rounded-lg`}
+        >
+          {addedMode ? (
+            <div className="flex flex-col items-center">
+              <div className="flex items-center gap-6 mb-4">
+                <Heading
+                  mainTitle="Your menu items"
+                  subTitle="Checkout tasty menu items added"
+                />
+                <span
+                  className="flex gap-1 border-2 rounded-md cursor-pointer py-1 px-2"
+                  onClick={() => setAddedMode(false)}
+                >
+                  <IoMdArrowRoundBack size={20} />
+                  Back
+                </span>
+              </div>
+              <div className="flex gap-3 flex-wrap">
+                {menuItems.map((item: MenuItemWithUser) => (
+                  <MenuCard
+                    key={item.id}
+                    name={item.menuItemName}
+                    desc={item.description}
+                    price={item.price}
+                    vendor={{ name: item.user.name }}
+                    image={item.image}
+                    menuItem={item}
+                  />
                 ))}
-              </select>
-
-              <Button label={'Add menu'} addBtn onClick={submitMenuItemName} />
+              </div>
             </div>
-          </div>
+          ) : (
+            <>
+              <MenuInput
+                menuItemName={menuItemName}
+                image={image}
+                description={description}
+                price={price}
+                selectedOption={selectedOption}
+                setImage={setImage}
+                setMenuItemName={setMenuItemName}
+                setDescription={setDescription}
+                setPrice={setPrice}
+                setSelectedOption={setSelectedOption}
+                setAddedMode={setAddedMode}
+                onClick={submitMenuItemName}
+                categories={categories}
+              />
+            </>
+          )}
         </div>
       </div>
     </Container>
