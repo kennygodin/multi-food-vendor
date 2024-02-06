@@ -16,8 +16,9 @@ interface MenuInputProps {
   setPrice: (value: number | null) => void;
   setSelectedOption: (value: string) => void;
   categories: Category[];
-  setAddedMode: (value: boolean) => void;
-  onClick: () => void;
+  setAddedMode?: () => void;
+  onSubmit: () => void;
+  label: string;
 }
 
 const MenuInput: React.FC<MenuInputProps> = ({
@@ -33,7 +34,8 @@ const MenuInput: React.FC<MenuInputProps> = ({
   setSelectedOption,
   categories,
   setAddedMode,
-  onClick,
+  onSubmit,
+  label,
 }) => {
   return (
     <div className="flex items-start gap-3 mb-2">
@@ -41,7 +43,7 @@ const MenuInput: React.FC<MenuInputProps> = ({
         <ImageInput link={image} setLink={setImage} />
         <span
           className="mt-3 bg-white border-black rounded-lg text-black p-1 text-sm font-light  hover:opacity-80 transition w-full border cursor-pointer text-center"
-          onClick={() => setAddedMode(true)}
+          onClick={setAddedMode}
         >
           All items
         </span>
@@ -83,7 +85,7 @@ const MenuInput: React.FC<MenuInputProps> = ({
           ))}
         </select>
 
-        <Button label={'Add menu'} addBtn onClick={onClick} />
+        <Button label={label} addBtn onClick={onSubmit} />
       </div>
     </div>
   );

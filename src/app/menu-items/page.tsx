@@ -35,7 +35,7 @@ const MenuItemsPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [vendorName, setVendorName] = useState('');
   const [role, setRole] = useState(null);
-  const [addedMode, setAddedMode] = useState(false);
+  const [addedMode, setAddedMode] = useState(true);
 
   const getCurrentUser = useCallback(async () => {
     setIsLoading(true);
@@ -134,21 +134,20 @@ const MenuItemsPage = () => {
           } p-5 rounded-lg`}
         >
           {addedMode ? (
-            <div className="flex flex-col items-center">
-              <div className="flex items-center gap-6 mb-4">
+            <div className="flex flex-col items-center h-[70vh]">
+              <div className="flex items-center justify-around mb-4 w-full bg-neutral-200 p-2 border border-black rounded-md">
                 <Heading
                   mainTitle="Your menu items"
                   subTitle="Checkout tasty menu items added"
                 />
                 <span
-                  className="flex gap-1 border-2 rounded-md cursor-pointer py-1 px-2"
+                  className="bg-white border-black rounded-lg text-black p-1 text-sm font-light  hover:opacity-80 transition w-20 border cursor-pointer text-center"
                   onClick={() => setAddedMode(false)}
                 >
-                  <IoMdArrowRoundBack size={20} />
-                  Back
+                  Add item
                 </span>
               </div>
-              <div className="flex gap-3 flex-wrap">
+              <div className="flex gap-3 flex-wrap justify-center overflow-y-auto">
                 {menuItems.map((item: MenuItemWithUser) => (
                   <MenuCard
                     key={item.id}
@@ -175,9 +174,10 @@ const MenuItemsPage = () => {
                 setDescription={setDescription}
                 setPrice={setPrice}
                 setSelectedOption={setSelectedOption}
-                setAddedMode={setAddedMode}
-                onClick={submitMenuItemName}
+                setAddedMode={() => setAddedMode(true)}
+                onSubmit={submitMenuItemName}
                 categories={categories}
+                label="Add item"
               />
             </>
           )}
