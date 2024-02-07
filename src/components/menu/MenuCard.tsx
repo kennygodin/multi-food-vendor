@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { MenuItem } from '@prisma/client';
 import { useRouter } from 'next/navigation';
+import Button from '../buttons/Button';
 
 interface MenuCardProps {
   name: string;
@@ -8,7 +9,8 @@ interface MenuCardProps {
   price: string | number;
   vendor: { name: string };
   image: string | null;
-  menuItem: MenuItem;
+  menuItem?: MenuItem;
+  home?: boolean;
 }
 
 const MenuCard: React.FC<MenuCardProps> = ({
@@ -18,15 +20,24 @@ const MenuCard: React.FC<MenuCardProps> = ({
   vendor,
   image,
   menuItem,
+  home,
 }) => {
   const router = useRouter();
 
   return (
     <div
-      onClick={() => router.push(`/menu-items/${menuItem.id}`)}
-      className="h-[280px] transform transition-transform hover:scale-105 shadow-sm"
+      onClick={() => menuItem && router.push(`/menu-items/${menuItem.id}`)}
+      className={`${
+        home
+          ? 'h-[300px] flex flex-col justify-between'
+          : 'h-[280px] cursor-pointer'
+      } p-5 transform transition-transform hover:scale-105 shadow-sm bg-neutral-200 rounded-lg`}
     >
-      <div className="w-40 h-full p-5 bg-neutral-200 flex flex-col gap-1 rounded-lg cursor-pointer hover:opacity-80 hover:border">
+      <div
+        className={`w-40 flex flex-col gap-1  ${
+          home ? 'h-[90%]' : 'hover:opacity-80 hover:border h-full'
+        } `}
+      >
         <div className="relative w-full h-20">
           {image === null || '' ? (
             <div>No image</div>
@@ -56,6 +67,7 @@ const MenuCard: React.FC<MenuCardProps> = ({
           </span>
         </div>
       </div>
+      {home && <Button label="Add to cart" small outline />}
     </div>
   );
 };
