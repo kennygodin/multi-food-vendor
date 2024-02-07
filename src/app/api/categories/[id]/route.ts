@@ -37,3 +37,36 @@ export async function DELETE(
     return NextResponse.error();
   }
 }
+
+export async function GET(
+  req: Request,
+  { params }: { params: { id: string } }
+) {
+  const id = params.id;
+  if (id === 'menu') {
+    try {
+      const catMenuItems = await prisma.category.findMany({
+        include: {
+          menuItems: {
+            include: {
+              user: {
+                select: {
+                  name: true,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      if (!catMenuItems) {
+        return NextResponse.json([]);
+      }
+      return NextResponse.json(catMenuItems);
+    } catch (error) {
+      return NextResponse.error();
+    }
+  } else {
+    return NextResponse.error();
+  }
+}

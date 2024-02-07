@@ -59,7 +59,7 @@ export default function Home() {
     <Container>
       <Slider />
       {/* MENU ITEMS */}
-      <div className="mt-10 max-w-3xl mx-auto flex flex-col items-center">
+      <div className="mt-20 max-w-3xl mx-auto flex flex-col items-center">
         <Heading
           mainTitle="Latest Menu Items"
           subTitle="Checkout recent menu items by our vendors"
@@ -81,7 +81,7 @@ export default function Home() {
         </div>
       </div>
       {/* VENDORS */}
-      <div className="bg-neutral-200 my-10 max-w-3xl mx-auto rounded-md p-10">
+      <div className="bg-neutral-200 my-20 max-w-6xl mx-auto p-10">
         <Heading
           mainTitle="Our Vendors"
           subTitle="Checkout more menu by our vendors"
