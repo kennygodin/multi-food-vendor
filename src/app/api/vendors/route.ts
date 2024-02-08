@@ -7,6 +7,9 @@ export async function GET(req: Request) {
       where: {
         role: 'VENDOR',
       },
+      orderBy: {
+        createdAt: 'desc',
+      },
     });
     if (!vendors) {
       return NextResponse.json([]);

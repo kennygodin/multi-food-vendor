@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import axios, { AxiosResponse } from 'axios';
+import { useRouter } from 'next/navigation';
 
 import Container from '@/components/Container';
 import Heading from '@/components/Heading';
@@ -19,6 +20,8 @@ export default function Home() {
   const [latestItems, setLatestItems] = useState([]);
   const [vendors, setVendors] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter();
+
   const getMenuItems = useCallback(async () => {
     try {
       setIsLoading(true);
@@ -90,6 +93,7 @@ export default function Home() {
         <div className="flex gap-2 flex-wrap justify-center mt-5">
           {vendors.map((vendor: User) => (
             <VendorCard
+              onClick={() => router.push(`/vendors/${vendor.id}`)}
               key={vendor.id}
               name={vendor.name}
               email={vendor.email}
