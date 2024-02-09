@@ -21,7 +21,7 @@ const ConfirmDelBtn: React.FC<ConfirmDelBtnProps> = ({ label, onDelete }) => {
       />
 
       {showConfirm && (
-        <div className="fixed bg-black/80 inset-0 flex items-center h-full justify-center">
+        <div className="fixed bg-black/80 inset-0 flex items-center h-full justify-center z-50">
           <div className="bg-white p-10 rounded-lg">
             <div>Are you sure you want to delete?</div>
             <div className="flex gap-3 mt-2">

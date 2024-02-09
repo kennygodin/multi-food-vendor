@@ -10,6 +10,7 @@ import Loader from '@/components/Loader';
 import { useCallback, useEffect, useState } from 'react';
 import axios, { AxiosResponse } from 'axios';
 import { toast } from 'react-hot-toast';
+import ProfileDetails from '@/components/inputs/ProfileDetails';
 
 const ProfilePage = () => {
   const [name, setName] = useState('');
@@ -92,54 +93,23 @@ const ProfilePage = () => {
             <div className="flex flex-col gap-1">
               <ImageInput link={image} setLink={setImage} />
             </div>
-            <div className="w-full flex flex-col gap-2">
-              <Input
-                id="name"
-                label="Name or Business name"
-                value={name}
-                onChange={(e: any) => setName(e.target.value)}
-              />
-              <Input
-                id="email"
-                label="Email or Admin email"
-                disabled
-                value={email}
-                onChange={(e: any) => setEmail(e.target.value)}
-              />
-              <Input
-                id="phoneNumber"
-                label="Phone number"
-                value={phoneNumber}
-                onChange={(e: any) => setPhoneNumber(e.target.value)}
-              />
-              <Input
-                id="address"
-                label="Address"
-                value={address}
-                onChange={(e: any) => setAddress(e.target.value)}
-              />
-              <Input
-                id="state"
-                label="State"
-                value={state}
-                onChange={(e: any) => setState(e.target.value)}
-              />
-
-              <div className="flex gap-2">
-                <Input
-                  id="country"
-                  label="Country"
-                  value={country}
-                  onChange={(e: any) => setCountry(e.target.value)}
-                />
-                <Input
-                  id="postal code"
-                  label="Postal code"
-                  value={postalCode}
-                  onChange={(e: any) => setPostalCode(e.target.value)}
-                />
-              </div>
-            </div>
+            <ProfileDetails
+              profile
+              name={name}
+              email={email}
+              address={address}
+              postalCode={postalCode}
+              state={state}
+              phoneNumber={phoneNumber}
+              country={country}
+              setName={setName}
+              setEmail={setEmail}
+              setAddress={setAddress}
+              setPhoneNumber={setPhoneNumber}
+              setState={setState}
+              setCountry={setCountry}
+              setPostalCode={setPostalCode}
+            />
           </div>
           <Button label="Update user profile" onClick={updateProfile} />
         </div>

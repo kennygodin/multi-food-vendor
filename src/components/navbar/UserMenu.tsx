@@ -8,6 +8,7 @@ import Avatar from '../Avatar';
 import MenuItem from './MenuItem';
 
 import { signOut, useSession } from 'next-auth/react';
+import Link from 'next/link';
 
 const UserMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -27,9 +28,9 @@ const UserMenu = () => {
           <div className="w-[10px] h-[10px]"></div>
           <Avatar image={image} />
         </div>
-        <div className="cursor-pointer">
+        <Link href="/cart">
           <BsCart size={20} />
-        </div>
+        </Link>
       </div>
 
       {isOpen && (
