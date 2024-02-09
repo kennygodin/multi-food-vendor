@@ -7,7 +7,7 @@ const NavLinks = () => {
     <div className="flex sm:gap-1 md:gap-3 ">
       <NavLinksItem label="Home" url="/" />
       <NavLinksItem label="Menu" url="/menu" />
-      <NavLinksItem label="About" url="/about" />
+      <NavLinksItem label="About" url="#about" />
     </div>
   );
 };

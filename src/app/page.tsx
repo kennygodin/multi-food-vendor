@@ -11,6 +11,8 @@ import MenuCard from '@/components/menu/MenuCard';
 import Loader from '@/components/Loader';
 import { MenuItem, User } from '@prisma/client';
 import VendorCard from '@/components/VendorCard';
+import About from '@/components/About';
+import Footer from '@/components/Footer';
 
 interface MenuItemWithUser extends MenuItem {
   user: { name: string };
@@ -103,6 +105,12 @@ export default function Home() {
           ))}
         </div>
       </div>
+      {/* ABOUT */}
+      <div id="about">
+        <About />
+      </div>
+      {/* FOOTER */}
+      <Footer />
     </Container>
   );
 }
