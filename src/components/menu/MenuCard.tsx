@@ -10,6 +10,7 @@ interface MenuCardProps {
   vendor: { name: string };
   image: string | null;
   menuItem?: MenuItem;
+  onClick?: () => void;
   home?: boolean;
 }
 
@@ -20,6 +21,7 @@ const MenuCard: React.FC<MenuCardProps> = ({
   vendor,
   image,
   menuItem,
+  onClick,
   home,
 }) => {
   const router = useRouter();
@@ -67,7 +69,7 @@ const MenuCard: React.FC<MenuCardProps> = ({
           </span>
         </div>
       </div>
-      {home && <Button label="Add to cart" small outline />}
+      {home && <Button label="Add to cart" small outline onClick={onClick} />}
     </div>
   );
 };

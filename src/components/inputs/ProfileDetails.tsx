@@ -18,6 +18,7 @@ interface ProfileDetailsProps {
   setState: (value: any) => void;
   setCountry: (value: any) => void;
   setPostalCode: (value: any) => void;
+  label?: string;
   onClick?: () => void;
   profile?: boolean;
 }
@@ -37,6 +38,7 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({
   setState,
   setCountry,
   setPostalCode,
+  label,
   profile,
 }) => {
   return (
@@ -82,7 +84,7 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({
           onChange={(e: any) => setPostalCode(e.target.value)}
         />
       </div>
-      {!profile && <Button label="Proceed to checkout" onClick={() => {}} />}
+      {!profile && label && <Button label={label} onClick={() => {}} />}
     </div>
   );
 };

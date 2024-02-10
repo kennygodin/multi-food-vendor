@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
+import { toast } from 'react-hot-toast';
 
 import Container from '@/components/Container';
 import Heading from '@/components/Heading';
@@ -9,6 +10,7 @@ import MenuCard from '@/components/menu/MenuCard';
 import axios, { AxiosResponse } from 'axios';
 import { Category, MenuItem, User } from '@prisma/client';
 import Loader from '@/components/Loader';
+import { useCartStore } from '@/utils/store';
 
 interface CategoryWithMenuItems extends Category {
   menuItems: MenuItem[];
@@ -18,6 +20,7 @@ interface MenuItemsWithUser extends MenuItem {
 }
 
 const MenuPage = () => {
+  const { addToCart, currentVendor, setCurrentVendor } = useCartStore();
   const [catMenuItems, setCatMenuItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const pathname = usePathname();
@@ -66,6 +69,25 @@ const MenuPage = () => {
                     vendor={{ name: menuItem?.user?.name || '' }}
                     image={menuItem.image}
                     home
+                    onClick={() => {
+                      const vendorName = menuItem.user.name;
+                      if (currentVendor && currentVendor !== vendorName) {
+                        return toast.error(
+                          'You can only order from a particular vendor at a time'
+                        );
+                      }
+                      setCurrentVendor(vendorName);
+                      addToCart({
+                        id: menuItem.id,
+                        name: menuItem.menuItemName,
+                        desc: menuItem.description,
+                        price: menuItem.price,
+                        vendor: menuItem.user.name,
+                        quantity: 1,
+                        image: menuItem.image,
+                      });
+                      toast.success('Product added to cart');
+                    }}
                   />
                 )
               )}

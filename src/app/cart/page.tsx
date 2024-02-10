@@ -2,38 +2,43 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import axios, { AxiosResponse } from 'axios';
 
-import Avatar from '@/components/Avatar';
 import Container from '@/components/Container';
 import Heading from '@/components/Heading';
-import ConfirmDelBtn from '@/components/buttons/ConfirmDelBtn';
 import ProfileDetails from '@/components/inputs/ProfileDetails';
+import CartProduct from '@/components/cart/CartProduct';
+import { useCartStore } from '@/utils/store';
+import ConfirmDelBtn from '@/components/buttons/ConfirmDelBtn';
+import Loader from '@/components/Loader';
 
 const CartPage = () => {
+  const { cartProducts, removeFromCart, totalItems, totalPrice, clearCart } =
+    useCartStore();
+
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [image, setImage] = useState<null | string>('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [address, setAddress] = useState('');
   const [state, setState] = useState('');
   const [country, setCountry] = useState('');
   const [postalCode, setPostalCode] = useState('');
   const [isLoading, setIsLoading] = useState(true);
-  const [currentUser, setCurrentUser] = useState(null);
 
   const getCurrentUser = useCallback(async () => {
+    setIsLoading(true);
     try {
       await axios.get('/api/profile').then((res: AxiosResponse) => {
         const userData = res.data;
         setName(userData.name);
         setEmail(userData.email);
-        setImage(userData.image);
         setPhoneNumber(userData.phoneNumber);
         setAddress(userData.address);
         setState(userData.state);
         setCountry(userData.country);
         setPostalCode(userData.postalCode);
+        setIsLoading(false);
       });
     } catch (error) {
+      setIsLoading(false);
       console.log(error);
     }
   }, []);
@@ -42,67 +47,67 @@ const CartPage = () => {
     getCurrentUser();
   }, [getCurrentUser]);
 
+  if (isLoading) {
+    return <Loader />;
+  }
+
+  if (totalItems < 1) {
+    return (
+      <div className="mt-8">
+        <Heading
+          mainTitle="Your Cart is Empty"
+          subTitle="Explore our delicious offerings and add items to your cart."
+          center
+          home
+        />
+      </div>
+    );
+  }
+
   return (
     <Container>
       <div className="mt-8 max-w-6xl mx-auto px-2 ">
         <Heading mainTitle="Your Cart Page" home center />
-        <div className="flex gap-2 mt-4 p-5">
+        <div className="flex gap-2 mt-4 p-5 item-start">
           {/* ITEMS */}
           <div className="basis-2/3 flex flex-col gap-2">
-            <div className="flex gap-2 items-center justify-between bg-neutral-200 p-2 rounded-md text-sm">
-              <div className="flex gap-2 items-center">
-                <Avatar
-                  tab
-                  image="https://res.cloudinary.com/kencodin/image/upload/v1706231712/multi-food%20vendor/slider6_hm8khs.jpg"
-                />
-                <div className="flex flex-col">
-                  <span>
-                    <b>Name:</b> Pepperoni pizza
+            {cartProducts.map((item) => (
+              <CartProduct
+                key={item.id}
+                name={item.name}
+                desc={item.desc}
+                price={item.price}
+                vendor={item.vendor}
+                image={item.image}
+                onDelete={() => removeFromCart(item)}
+              />
+            ))}
+            <hr className="bg-black h-[1px] my-2" />
+            <div className="flex items-center justify-between">
+              <div className="flex flex-col gap-1">
+                <div className="flex gap-2 items-center">
+                  <span className="text-sm font-semibold">
+                    Subtotal ({totalItems} items):
                   </span>
-                  <span>
-                    <b>Desc:</b> my delicious pepperoni pizza
-                  </span>
-                  <span>
-                    <b>Price: 2</b>
-                  </span>
-                  <span>
-                    <b>Vendor:</b> Gourmet Delights
-                  </span>
+                  <span>₦ 600</span>
+                </div>
+                <div className="flex gap-2 items-center">
+                  <span className="text-sm font-semibold"> Delivery: </span>
+                  <span>₦ 60</span>
+                </div>
+                <div className="flex gap-2 items-center">
+                  <span className="text-sm font-semibold"> Total:</span>
+                  <span>₦ {totalPrice}</span>
                 </div>
               </div>
-
-              <ConfirmDelBtn label="X" onDelete={() => {}} />
-            </div>
-            <div className="flex gap-2 items-center justify-between bg-neutral-200 p-2 rounded-md text-sm">
-              <div className="flex gap-2 items-center">
-                <Avatar
-                  image="https://res.cloudinary.com/kencodin/image/upload/v1706231712/multi-food%20vendor/slider6_hm8khs.jpg"
-                  tab
-                />
-                <div className="flex flex-col">
-                  <span>
-                    <b>Name:</b> Pepperoni pizza
-                  </span>
-                  <span>
-                    <b>Desc:</b> my delicious pepperoni pizza
-                  </span>
-                  <span>
-                    <b>Price: 2</b>
-                  </span>
-                  <span>
-                    <b>Vendor:</b> Gourmet Delights
-                  </span>
-                </div>
-              </div>
-
-              <ConfirmDelBtn label="X" onDelete={() => {}} />
+              <ConfirmDelBtn label="Clear cart" onDelete={clearCart} />
             </div>
           </div>
           {/* CHECKOUT */}
           <div className="basis-1/3 bg-neutral-200 p-5 rounded-md flex flex-col gap-2">
             <Heading
               mainTitle="Delivery Details"
-              subTitle="Ensure your information are correct"
+              subTitle="Please proceed to checkout"
               center
             />
             {/* Profile */}
@@ -122,6 +127,7 @@ const CartPage = () => {
               setCountry={setCountry}
               setPostalCode={setPostalCode}
               onClick={() => {}}
+              label={`Pay ₦ ${totalPrice}`}
             />
           </div>
         </div>

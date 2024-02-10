@@ -22,7 +22,11 @@ export default async function RootLayout({
     <html lang="en">
       <body className={nunito.className}>
         <AppContext>
-          <Toaster />
+          <Toaster
+            containerStyle={{
+              fontSize: 14,
+            }}
+          />
           <Navbar />
           <div className="pt-14">{children}</div>
         </AppContext>

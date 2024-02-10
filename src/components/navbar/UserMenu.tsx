@@ -9,8 +9,10 @@ import MenuItem from './MenuItem';
 
 import { signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
+import { useCartStore } from '@/utils/store';
 
 const UserMenu = () => {
+  const { totalItems } = useCartStore();
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
 
@@ -28,9 +30,12 @@ const UserMenu = () => {
           <div className="w-[10px] h-[10px]"></div>
           <Avatar image={image} />
         </div>
-        <Link href="/cart">
-          <BsCart size={20} />
-        </Link>
+        {totalItems > 0 && (
+          <Link href="/cart" className="flex gap-1 items-center">
+            <BsCart size={20} />
+            <span>Cart ({totalItems})</span>
+          </Link>
+        )}
       </div>
 
       {isOpen && (

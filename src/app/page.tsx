@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import axios, { AxiosResponse } from 'axios';
 import { useRouter } from 'next/navigation';
+import { toast } from 'react-hot-toast';
 
 import Container from '@/components/Container';
 import Heading from '@/components/Heading';
@@ -13,12 +14,14 @@ import { MenuItem, User } from '@prisma/client';
 import VendorCard from '@/components/VendorCard';
 import About from '@/components/About';
 import Footer from '@/components/Footer';
+import { useCartStore } from '@/utils/store';
 
 interface MenuItemWithUser extends MenuItem {
   user: { name: string };
 }
 
 export default function Home() {
+  const { addToCart, currentVendor, setCurrentVendor } = useCartStore();
   const [latestItems, setLatestItems] = useState([]);
   const [vendors, setVendors] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -72,21 +75,40 @@ export default function Home() {
           home
         />
         <div className="flex gap-3 flex-wrap justify-center mt-8">
-          {latestItems.map((item: MenuItemWithUser) => (
+          {latestItems.map((menuItem: MenuItemWithUser) => (
             <MenuCard
-              key={item.id}
-              name={item.menuItemName}
-              desc={item.description}
-              price={item.price}
-              vendor={{ name: item.user.name }}
-              image={item.image}
+              key={menuItem.id}
+              name={menuItem.menuItemName}
+              desc={menuItem.description}
+              price={menuItem.price}
+              vendor={{ name: menuItem.user.name }}
+              image={menuItem.image}
               home
+              onClick={() => {
+                const vendorName = menuItem.user.name;
+                if (currentVendor && currentVendor !== vendorName) {
+                  return toast.error(
+                    'You can only order from a particular vendor at a time'
+                  );
+                }
+                setCurrentVendor(vendorName);
+                addToCart({
+                  id: menuItem.id,
+                  name: menuItem.menuItemName,
+                  desc: menuItem.description,
+                  price: menuItem.price,
+                  vendor: menuItem.user.name,
+                  quantity: 1,
+                  image: menuItem.image,
+                });
+                toast.success('Product added to cart');
+              }}
             />
           ))}
         </div>
       </div>
       {/* VENDORS */}
-      <div className="bg-neutral-200 my-20 max-w-6xl mx-auto p-10">
+      <div className="bg-neutral-200 my-20 max-w-6xl mx-auto py-10 px-20">
         <Heading
           mainTitle="Our Vendors"
           subTitle="Checkout more menu by our vendors"

@@ -10,6 +10,8 @@ import { Category, MenuItem, User } from '@prisma/client';
 import MenuCard from '@/components/menu/MenuCard';
 import VendorCard from '@/components/VendorCard';
 import Loader from '@/components/Loader';
+import toast from 'react-hot-toast';
+import { useCartStore } from '@/utils/store';
 
 interface UserWithCategory extends User {
   categories: Category[];
@@ -22,6 +24,7 @@ interface MenuItemsWithUser extends MenuItem {
 }
 
 const VendorPage = () => {
+  const { addToCart, currentVendor, setCurrentVendor } = useCartStore();
   const params = useParams<{ id: string }>();
   const [vendor, setVendor] = useState<UserWithCategory | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -85,6 +88,26 @@ const VendorPage = () => {
                       }}
                       image={menuItem.image}
                       home
+                      onClick={() => {
+                        const vendorName = (menuItem as MenuItemsWithUser).user
+                          ?.name;
+                        if (currentVendor && currentVendor !== vendorName) {
+                          return toast.error(
+                            'You can only order from a particular vendor at a time'
+                          );
+                        }
+                        setCurrentVendor(vendorName);
+                        addToCart({
+                          id: menuItem.id,
+                          name: menuItem.menuItemName,
+                          desc: menuItem.description,
+                          price: menuItem.price,
+                          vendor: vendorName,
+                          quantity: 1,
+                          image: menuItem.image,
+                        });
+                        toast.success('Product added to cart');
+                      }}
                     />
                   ))}
                 </div>
