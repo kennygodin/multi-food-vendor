@@ -1,7 +1,6 @@
 'use client';
 
 import Container from '@/components/Container';
-import Input from '@/components/inputs/Input';
 import Button from '@/components/buttons/Button';
 import UserTabs from '@/components/user/UserTabs';
 import ImageInput from '@/components/inputs/ImageInput';

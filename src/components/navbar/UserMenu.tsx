@@ -3,13 +3,13 @@
 import { useCallback, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { BsCart } from 'react-icons/bs';
+import { signOut, useSession } from 'next-auth/react';
+import { useCartStore } from '@/utils/store';
 
 import Avatar from '../Avatar';
 import MenuItem from './MenuItem';
 
-import { signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
-import { useCartStore } from '@/utils/store';
 
 const UserMenu = () => {
   const { totalItems } = useCartStore();
@@ -22,6 +22,11 @@ const UserMenu = () => {
 
   const { data, status } = useSession();
   const image = data?.user?.image;
+
+  const handleSignOut = useCallback(async () => {
+    setIsOpen(false);
+    await signOut();
+  }, []);
 
   return (
     <div className="relative">
@@ -68,12 +73,7 @@ const UserMenu = () => {
                 />
               )}
               {status === 'authenticated' && (
-                <MenuItem
-                  onClick={() => {
-                    signOut(), setIsOpen(false);
-                  }}
-                  label="Logout"
-                />
+                <MenuItem onClick={handleSignOut} label="Logout" />
               )}
             </>
           </div>

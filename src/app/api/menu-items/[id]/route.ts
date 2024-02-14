@@ -6,27 +6,50 @@ export async function GET(
   req: Request,
   { params }: { params: { id: string } }
 ) {
-  const currentUser = await getCurrentUser();
-  if (!currentUser) {
-    return null;
-  }
-  if (currentUser && currentUser.role !== 'VENDOR') {
-    return NextResponse.error();
-  }
   const id = params.id;
+  const currentUser = await getCurrentUser();
 
-  try {
-    const menuItem = await prisma.menuItem.findUnique({
-      where: { id },
-    });
-
-    if (!menuItem) {
-      return NextResponse.json({});
+  if (id === 'featured-items') {
+    try {
+      const menuItems = await prisma.menuItem.findMany({
+        orderBy: {
+          createdAt: 'desc',
+        },
+        include: {
+          user: {
+            select: {
+              name: true,
+            },
+          },
+        },
+      });
+      if (!menuItems) {
+        return NextResponse.json({});
+      }
+      return NextResponse.json(menuItems);
+    } catch (error) {
+      return NextResponse.error();
+    }
+  } else {
+    if (!currentUser) {
+      return null;
+    }
+    if (currentUser && currentUser.role !== 'VENDOR') {
+      return NextResponse.error();
     }
 
-    return NextResponse.json(menuItem);
-  } catch (error) {
-    return NextResponse.error();
+    try {
+      const menuItems = await prisma.menuItem.findUnique({
+        where: { id },
+      });
+
+      if (!menuItems) {
+        return NextResponse.json({});
+      }
+      return NextResponse.json(menuItems);
+    } catch (error) {
+      return NextResponse.error();
+    }
   }
 }
 

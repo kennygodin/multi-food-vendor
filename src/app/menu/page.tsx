@@ -79,12 +79,16 @@ const MenuPage = () => {
                       setCurrentVendor(vendorName);
                       addToCart({
                         id: menuItem.id,
-                        name: menuItem.menuItemName,
-                        desc: menuItem.description,
+                        menuItemName: menuItem.menuItemName,
+                        description: menuItem.description,
                         price: menuItem.price,
+                        userId: menuItem.userId,
+                        categoryId: menuItem.categoryId,
                         vendor: menuItem.user.name,
                         quantity: 1,
                         image: menuItem.image,
+                        createdAt: menuItem.createdAt,
+                        updatedAt: menuItem.updatedAt,
                       });
                       toast.success('Product added to cart');
                     }}

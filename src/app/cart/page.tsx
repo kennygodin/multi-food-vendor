@@ -1,6 +1,10 @@
 'use client';
+
 import React, { useCallback, useEffect, useState } from 'react';
 import axios, { AxiosResponse } from 'axios';
+import { PaystackButton } from 'react-paystack';
+import { toast } from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
 
 import Container from '@/components/Container';
 import Heading from '@/components/Heading';
@@ -13,6 +17,7 @@ import Loader from '@/components/Loader';
 const CartPage = () => {
   const { cartProducts, removeFromCart, totalItems, totalPrice, clearCart } =
     useCartStore();
+  const router = useRouter();
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -22,6 +27,62 @@ const CartPage = () => {
   const [country, setCountry] = useState('');
   const [postalCode, setPostalCode] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+
+  const PAYSTACK_PUBLIC_KEY = process.env.NEXT_PUBLIC_PAYSTACK_KEY as string;
+
+  // Paystack components
+  const componentProps = {
+    email,
+    amount: totalPrice * 100,
+    firstname: name,
+    phone: phoneNumber,
+    publicKey: PAYSTACK_PUBLIC_KEY,
+    text: `Pay ₦ ${totalPrice + 500}`,
+    onSuccess: (transaction: any) => {
+      const reference = transaction.reference;
+      verifyTransactionAndCreateOrder(reference);
+    },
+    onClose: () => toast.error('Transaction cancelled!'),
+  };
+
+  const verifyTransactionAndCreateOrder = useCallback(
+    async (reference: string) => {
+      setIsLoading(true);
+      try {
+        await axios.post('/api/orders', {
+          name,
+          email,
+          phoneNumber,
+          address,
+          state,
+          country,
+          postalCode,
+          cartProducts,
+          reference,
+        });
+        toast.success('Your order has been placed.');
+        clearCart();
+        setIsLoading(false);
+        return router.push('/orders');
+      } catch (error) {
+        console.log(error);
+        toast.error('Transaction failed!');
+        setIsLoading(false);
+      }
+    },
+    [
+      name,
+      email,
+      phoneNumber,
+      address,
+      state,
+      country,
+      postalCode,
+      cartProducts,
+      clearCart,
+      router,
+    ]
+  );
 
   const getCurrentUser = useCallback(async () => {
     setIsLoading(true);
@@ -74,8 +135,8 @@ const CartPage = () => {
             {cartProducts.map((item) => (
               <CartProduct
                 key={item.id}
-                name={item.name}
-                desc={item.desc}
+                name={item.menuItemName}
+                desc={item.description}
                 price={item.price}
                 vendor={item.vendor}
                 image={item.image}
@@ -89,15 +150,15 @@ const CartPage = () => {
                   <span className="text-sm font-semibold">
                     Subtotal ({totalItems} items):
                   </span>
-                  <span>₦ 600</span>
+                  <span>₦ {totalPrice}</span>
                 </div>
                 <div className="flex gap-2 items-center">
                   <span className="text-sm font-semibold"> Delivery: </span>
-                  <span>₦ 60</span>
+                  <span>₦ 500</span>
                 </div>
                 <div className="flex gap-2 items-center">
                   <span className="text-sm font-semibold"> Total:</span>
-                  <span>₦ {totalPrice}</span>
+                  <span>₦ {totalPrice + 500}</span>
                 </div>
               </div>
               <ConfirmDelBtn label="Clear cart" onDelete={clearCart} />
@@ -105,11 +166,7 @@ const CartPage = () => {
           </div>
           {/* CHECKOUT */}
           <div className="basis-1/3 bg-neutral-200 p-5 rounded-md flex flex-col gap-2">
-            <Heading
-              mainTitle="Delivery Details"
-              subTitle="Please proceed to checkout"
-              center
-            />
+            <Heading mainTitle="Delivery Details" center />
             {/* Profile */}
             <ProfileDetails
               name={name}
@@ -126,8 +183,10 @@ const CartPage = () => {
               setState={setState}
               setCountry={setCountry}
               setPostalCode={setPostalCode}
-              onClick={() => {}}
-              label={`Pay ₦ ${totalPrice}`}
+            />
+            <PaystackButton
+              className="bg-green-500 border-white text-white py-2 rounded-lg hover:opacity-80 transition font-semibold text-base"
+              {...componentProps}
             />
           </div>
         </div>

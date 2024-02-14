@@ -32,14 +32,14 @@ const UserTabs: React.FC<UserTabsProps> = ({ role }) => {
           url="/menu-items"
         />
       )}
-      {role === 'VENDOR' && (
+      {
         <NavLinksItem
           tab
           label="Orders"
           path={currentPath === '/orders'}
           url="/orders"
         />
-      )}
+      }
     </div>
   );
 };

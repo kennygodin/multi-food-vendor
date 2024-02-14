@@ -40,51 +40,73 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({
   setPostalCode,
   label,
   profile,
+  onClick,
 }) => {
   return (
-    <div className="w-full flex flex-col gap-2">
-      <Input
-        id="name"
-        label="Name or Business name"
-        value={name}
-        onChange={(e: any) => setName(e.target.value)}
-      />
-      <Input
-        id="email"
-        label="Email or Admin email"
-        disabled={profile}
-        value={email}
-        onChange={(e: any) => setEmail(e.target.value)}
-      />
-      <Input
-        id="phoneNumber"
-        label="Phone number"
-        value={phoneNumber}
-        onChange={(e: any) => setPhoneNumber(e.target.value)}
-      />
-      <Input
-        id="address"
-        label="Address"
-        value={address}
-        onChange={(e: any) => setAddress(e.target.value)}
-      />
-      <Input id="state" label="State" value={state} onChange={setState} />
-
-      <div className="flex gap-2">
+    <div className="w-full flex flex-col">
+      <div>
+        <label className=" text-sm">Name</label>
         <Input
-          id="country"
-          label="Country"
-          value={country}
-          onChange={(e: any) => setCountry(e.target.value)}
-        />
-        <Input
-          id="postal code"
-          label="Postal code"
-          value={postalCode}
-          onChange={(e: any) => setPostalCode(e.target.value)}
+          id="name"
+          label="Name or vendor name"
+          value={name}
+          onChange={(e: any) => setName(e.target.value)}
         />
       </div>
-      {!profile && label && <Button label={label} onClick={() => {}} />}
+      <div>
+        <label className="text-sm">Email</label>
+        <Input
+          id="email"
+          label="Email"
+          disabled={profile}
+          value={email}
+          onChange={(e: any) => setEmail(e.target.value)}
+        />
+      </div>
+      <div>
+        <label className="text-sm">Phone number</label>
+        <Input
+          id="phoneNumber"
+          label="Phone number"
+          value={phoneNumber}
+          onChange={(e: any) => setPhoneNumber(e.target.value)}
+        />
+      </div>
+      <div>
+        <label className="text-sm">Address</label>
+        <Input
+          id="address"
+          label="Address"
+          value={address}
+          onChange={(e: any) => setAddress(e.target.value)}
+        />
+      </div>
+      <div>
+        <label className=" text-sm">State</label>
+        <Input id="state" label="State" value={state} onChange={setState} />
+      </div>
+
+      <div className="flex gap-2">
+        <div>
+          <label className=" text-sm">Country</label>
+          <Input
+            id="country"
+            label="Country"
+            value={country}
+            onChange={(e: any) => setCountry(e.target.value)}
+          />
+        </div>
+        <div>
+          <label className=" text-sm">Postal code</label>
+          <Input
+            id="postal code"
+            label="Postal code"
+            value={postalCode}
+            onChange={(e: any) => setPostalCode(e.target.value)}
+          />
+        </div>
+      </div>
+      {!profile && label && <Button label={label} onClick={onClick} />}
     </div>
   );
 };

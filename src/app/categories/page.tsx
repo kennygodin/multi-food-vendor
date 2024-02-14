@@ -121,47 +121,49 @@ const CategoriesPage = () => {
   }
   return (
     <Container>
-      <div className="max-w-3xl mx-auto mt-8 flex flex-col items-center">
-        <UserTabs role={role} />
-        <div className="w-[80%] mt-8 bg-neutral-200 p-10 rounded-lg">
-          <div className="flex gap-3">
-            <Input
-              id="category"
-              value={categoryName}
-              onChange={(e: any) => setCategoryName(e.target.value)}
-              label="Enter a category"
-            />
-            <Button
-              label={updateMode ? 'Update' : 'Add'}
-              addBtn
-              onClick={submitCategoryName}
-            />
-          </div>
-          <h2 className="mt-3 mb-1 text-sm">Available categories</h2>
-          {/* CATEGORIES */}
-          <div className="flex flex-col gap-3 ">
-            {categories.map((cat: Category) => (
-              <div key={cat.id} className="flex gap-3 items-center">
-                <span
-                  onClick={() =>
-                    editCategoryName(cat.id, cat.categoryName || '')
-                  }
-                  className="flex-1 border border-black bg-white rounded-md p-2 cursor-pointer"
-                >
-                  {cat.categoryName}
-                </span>
+      {!isLoading && (
+        <div className="max-w-3xl mx-auto mt-8 flex flex-col items-center">
+          <UserTabs role={role} />
+          <div className="w-[80%] mt-8 bg-neutral-200 p-10 rounded-lg">
+            <div className="flex gap-3">
+              <Input
+                id="category"
+                value={categoryName}
+                onChange={(e: any) => setCategoryName(e.target.value)}
+                label="Enter a category"
+              />
+              <Button
+                label={updateMode ? 'Update' : 'Add'}
+                addBtn
+                onClick={submitCategoryName}
+              />
+            </div>
+            <h2 className="mt-3 mb-1 text-sm">Available categories</h2>
+            {/* CATEGORIES */}
+            <div className="flex flex-col gap-3 ">
+              {categories.map((cat: Category) => (
+                <div key={cat.id} className="flex gap-3 items-center">
+                  <span
+                    onClick={() =>
+                      editCategoryName(cat.id, cat.categoryName || '')
+                    }
+                    className="flex-1 border border-black bg-white rounded-md p-2 cursor-pointer"
+                  >
+                    {cat.categoryName}
+                  </span>
 
-                <div className="block">
-                  <ConfirmDelBtn
-                    label="x"
-                    onDelete={() => deleteCategoryName(cat.id)}
-                  />
+                  <div className="block">
+                    <ConfirmDelBtn
+                      label="x"
+                      onDelete={() => deleteCategoryName(cat.id)}
+                    />
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </Container>
   );
 };

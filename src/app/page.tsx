@@ -30,7 +30,7 @@ export default function Home() {
   const getMenuItems = useCallback(async () => {
     try {
       setIsLoading(true);
-      await axios.get('/api/menu-items').then((res) => {
+      await axios.get('/api/menu-items/featured-items').then((res) => {
         const latestThree = res.data.slice(0, 3);
         setLatestItems(latestThree);
         setIsLoading(false);
@@ -94,12 +94,16 @@ export default function Home() {
                 setCurrentVendor(vendorName);
                 addToCart({
                   id: menuItem.id,
-                  name: menuItem.menuItemName,
-                  desc: menuItem.description,
+                  menuItemName: menuItem.menuItemName,
+                  description: menuItem.description,
                   price: menuItem.price,
+                  userId: menuItem.userId,
+                  categoryId: menuItem.categoryId,
                   vendor: menuItem.user.name,
                   quantity: 1,
                   image: menuItem.image,
+                  createdAt: menuItem.createdAt,
+                  updatedAt: menuItem.updatedAt,
                 });
                 toast.success('Product added to cart');
               }}

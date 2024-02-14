@@ -15,7 +15,6 @@ export async function POST(req: Request) {
     return NextResponse.error();
   }
 
-  // return NextResponse.json(true, { status: 201 });
   try {
     const menuItem = await prisma.menuItem.create({
       data: {
