@@ -30,15 +30,13 @@ const UserMenu = () => {
 
   return (
     <div className="relative">
-      <div className="flex items-center gap-3">
+      <div className="flex items-center justify-center gap-3">
         <div onClick={toggle} className="cursor-pointer">
-          <div className="w-[10px] h-[10px]"></div>
           <Avatar image={image} />
         </div>
         {totalItems > 0 && (
           <Link href="/cart" className="flex gap-1 items-center">
-            <BsCart size={20} />
-            <span>Cart ({totalItems})</span>
+            <span>Cart&nbsp;({totalItems})</span>
           </Link>
         )}
       </div>

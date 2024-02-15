@@ -129,7 +129,7 @@ const CartPage = () => {
     <Container>
       <div className="mt-8 max-w-6xl mx-auto px-2 ">
         <Heading mainTitle="Your Cart Page" home center />
-        <div className="flex gap-2 mt-4 p-5 item-start">
+        <div className="flex flex-col md:flex-row gap-2 mt-2 md:mt-4 md:p-5 item-start">
           {/* ITEMS */}
           <div className="basis-2/3 flex flex-col gap-2">
             {cartProducts.map((item) => (
@@ -144,8 +144,8 @@ const CartPage = () => {
               />
             ))}
             <hr className="bg-black h-[1px] my-2" />
-            <div className="flex items-center justify-between">
-              <div className="flex flex-col gap-1">
+            <div className="flex flex-col md:flex-row gap-2 items-center justify-between">
+              <div className="flex flex-col gap-1 text-sm">
                 <div className="flex gap-2 items-center">
                   <span className="text-sm font-semibold">
                     Subtotal ({totalItems} items):
