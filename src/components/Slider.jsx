@@ -42,27 +42,25 @@ const Slider = () => {
   }, []);
   return (
     <div>
-      <Container>
-        <div className="h-[70vh]">
-          {/* Image container */}
-          <div
-            className={`w-full h-full ${sliderData[currentSlide].bg} bg-cover bg-center
+      <div className="h-[50vh] md:h-[70vh]">
+        {/* Image container */}
+        <div
+          className={`w-full h-full ${sliderData[currentSlide].bg} bg-cover bg-center
             `}
-          >
-            <div className="relative h-full w-full bg-black/40 backdrop-brightness-75">
-              {/* Text container */}
-              <div className="w-1/2 bg-orange-500/80 absolute p-8 top-20 left-10 rounded-lg">
-                <h1 className="text-5xl text-white">
-                  {sliderData[currentSlide].title}
-                </h1>
-                <button className="text-white bg-green-500 py-2 px-3 mt-2 rounded-md flex items-center gap-2 hover:opacity-80 transition">
-                  <FaInfoCircle /> <span>Order now</span>
-                </button>
-              </div>
+        >
+          <div className="relative  h-full w-full bg-black/40 backdrop-brightness-75">
+            {/* Text container */}
+            <div className="w-[80%] px-4 py-2 md:w-1/2 bg-orange-500/80 absolute top-10 left-3 md:p-8 md:top-20 md:left-10 rounded-lg">
+              <h1 className="text-2xl md:text-5xl text-white">
+                {sliderData[currentSlide].title}
+              </h1>
+              <button className="text-white bg-green-500 py-2 px-3 mt-2 rounded-md flex items-center gap-2 hover:opacity-80 transition">
+                <FaInfoCircle /> <span>Order now</span>
+              </button>
             </div>
           </div>
         </div>
-      </Container>
+      </div>
     </div>
   );
 };

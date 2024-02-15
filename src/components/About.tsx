@@ -4,7 +4,7 @@ import Heading from './Heading';
 const About = () => {
   return (
     <Container>
-      <div className="max-w-3xl mx-auto p-5 flex flex-col gap-3 text-justify">
+      <div className="w-full md:max-w-3xl mx-auto p-2 md:p-5 flex flex-col gap-3 text-justify">
         <Heading
           mainTitle="FoodTroops"
           subTitle="Where Culinary Delights Unite!"

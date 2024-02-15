@@ -2,7 +2,7 @@ import Avatar from '@/components/Avatar';
 
 interface VendorCardProps {
   name: string | null;
-  email: string;
+  email?: string;
   phoneNumber: string | null;
   image: string | null;
   role?: string | null;
@@ -28,7 +28,7 @@ const VendorCard: React.FC<VendorCardProps> = ({
     <div
       onClick={onClick}
       className={`${
-        large ? 'mt-5' : 'w-[300px]'
+        large ? 'mt-5' : 'w-full md:w-[300px]'
       }  rounded-md p-4 text-sm leading-4 cursor-pointer transform transition-transform hover:scale-105 shadow-sm bg-white border border-gray-500 flex gap-2 items-start`}
     >
       {image && (
@@ -36,19 +36,19 @@ const VendorCard: React.FC<VendorCardProps> = ({
           <Avatar image={image} />
         </div>
       )}
-      <div className="flex flex-col">
-        <span className="flex items-center">
-          Vendor name:&nbsp;<span>{name}</span>
+      <div className="flex flex-col text-sm">
+        <span>
+          Vendor name:&nbsp;<b>{name}</b>
         </span>
-        <span className="flex items-center">
-          Email:&nbsp;<span>{email}</span>
+        <span className="hidden md:block">
+          Email:&nbsp;<b>{email}</b>
         </span>
-        <span className="flex items-center">
-          phone:&nbsp;<span>{phoneNumber}</span>
+        <span>
+          phone:&nbsp;<b>{phoneNumber}</b>
         </span>
         {large && (
-          <span className="flex items-center">
-            Role:&nbsp;<span>{role}</span>
+          <span>
+            Role:&nbsp;<b>{role}</b>
           </span>
         )}
         {large && (

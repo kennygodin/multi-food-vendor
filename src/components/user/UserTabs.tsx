@@ -9,7 +9,7 @@ const UserTabs: React.FC<UserTabsProps> = ({ role }) => {
   const currentPath = usePathname();
   // console.log(role);
   return (
-    <div className="flex gap-3 items-center">
+    <div className="flex flex-wrap justify-center gap-3 items-center">
       <NavLinksItem
         tab
         label="Profile"

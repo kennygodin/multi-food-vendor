@@ -38,7 +38,7 @@ const MenuInput: React.FC<MenuInputProps> = ({
   label,
 }) => {
   return (
-    <div className="flex items-start gap-3 mb-2">
+    <div className="flex flex-col md:flex-row items-start gap-3 mb-2">
       <div className="flex flex-col gap-1">
         <ImageInput link={image} setLink={setImage} />
         <span
@@ -48,7 +48,7 @@ const MenuInput: React.FC<MenuInputProps> = ({
           All items
         </span>
       </div>
-      <div className="grow flex flex-col gap-3">
+      <div className="w-full md:grow flex flex-col gap-3">
         <Input
           id="menuItemName"
           value={menuItemName}

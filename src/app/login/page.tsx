@@ -41,7 +41,7 @@ const LoginPage = () => {
     <Container>
       <div className="max-w-xl mx-auto bg-gray-200 shadow-md rounded-lg mt-8 p-5 flex flex-col gap-2">
         <Heading
-          mainTitle="Welcome back to FoodTroops"
+          mainTitle="Welcome back"
           subTitle="Log in to continue your culinary adventure"
         />
 
@@ -77,7 +77,7 @@ const LoginPage = () => {
           <Button label="Login" onClick={login} disabled={isLoading} />
         </div>
 
-        <div className="flex gap-3">
+        <div className="flex flex-col md:flex-row md:gap-2 text-sm">
           <span>Forgot password?</span>
           <Link href="/pass-reset" className="underline">
             Click here to reset password

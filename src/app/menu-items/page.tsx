@@ -4,7 +4,7 @@ import Container from '@/components/Container';
 import UserTabs from '@/components/user/UserTabs';
 import axios, { AxiosResponse } from 'axios';
 import Loader from '@/components/Loader';
-import { Category, MenuItem } from '@prisma/client';
+import { MenuItem } from '@prisma/client';
 
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -105,9 +105,12 @@ const MenuItemsPage = () => {
 
   useEffect(() => {
     getCurrentUser();
-    getCategories();
-    getMenuItems();
-  }, [getCurrentUser, getCategories, getMenuItems]);
+
+    if (role === 'VENDOR') {
+      getCategories();
+      getMenuItems();
+    }
+  }, [getCurrentUser, getCategories, getMenuItems, role]);
 
   if (isLoading) {
     return <Loader />;
@@ -120,22 +123,24 @@ const MenuItemsPage = () => {
   return (
     <Container>
       {
-        <div className="max-w-3xl mx-auto flex flex-col items-center mt-8">
-          <UserTabs role={'VENDOR'} />
+        <div className="max-w-3xl mx-auto flex flex-col items-center mt-4 md:mt-8">
+          <UserTabs role={role} />
           <div
-            className={`w-[80%] mt-8 ${
+            className={`w-full md:w-[80%] mt-4 md:mt-8 ${
               !addedMode && 'bg-neutral-200'
             } p-5 rounded-lg`}
           >
             {addedMode ? (
               <div className="flex flex-col items-center h-[70vh]">
-                <div className="flex items-center justify-around mb-4 w-full bg-neutral-200 p-2 border border-black rounded-md">
+                <div className="flex flex-col md:flex-row gap-3 items-center justify-around mb-4 w-full">
                   <Heading
                     mainTitle="Your menu items"
                     subTitle="Checkout tasty menu items added"
+                    center
+                    home
                   />
                   <span
-                    className="bg-white border-black rounded-lg text-black p-1 text-sm font-light  hover:opacity-80 transition w-20 border cursor-pointer text-center"
+                    className="bg-green-400 border-2 border-white rounded-lg text-white p-1 text-sm font-semibold  hover:opacity-80 transition w-20 cursor-pointer text-center"
                     onClick={() => setAddedMode(false)}
                   >
                     Add item

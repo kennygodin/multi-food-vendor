@@ -112,7 +112,7 @@ export default function Home() {
         </div>
       </div>
       {/* VENDORS */}
-      <div className="bg-neutral-200 my-20 max-w-6xl mx-auto py-10 px-20">
+      <div className="bg-neutral-200 my-20 max-w-full p-4 md:max-w-6xl mx-auto md:py-10 md:px-20">
         <Heading
           mainTitle="Our Vendors"
           subTitle="Checkout more menu by our vendors"

@@ -85,10 +85,10 @@ const ProfilePage = () => {
 
   return (
     <Container>
-      <div className="max-w-3xl mx-auto mt-8 flex flex-col items-center">
+      <div className="max-w-3xl mx-auto mt-4 md:mt-8 flex flex-col items-center">
         <UserTabs role={role} />
-        <div className="w-[80%] mt-8 bg-neutral-200 p-10 rounded-lg">
-          <div className="flex items-start gap-3 mb-2">
+        <div className="w-full md:w-[80%] mt-4 md:mt-8 bg-neutral-200 p-5 md:p-10 rounded-lg">
+          <div className="flex flex-col md:flex-row items-start gap-3 mb-2">
             <div className="flex flex-col gap-1">
               <ImageInput link={image} setLink={setImage} />
             </div>

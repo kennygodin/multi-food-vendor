@@ -55,17 +55,17 @@ const MenuCard: React.FC<MenuCardProps> = ({
         </div>
         <div className="flex flex-col gap-1 text-sm leading-4 mt-1">
           <span>
-            <span className="font-bold">Name: </span> {name}
+            <span>Name: </span> <b>{name}</b>
           </span>
           <span>
-            <span className="font-bold "> Desc: </span>
-            {desc}
+            <span> Desc: </span>
+            <b>{desc}</b>
           </span>
           <span>
-            <span className="font-bold">Price: </span> {price}
+            <span>Price: </span> <b>{price}</b>
           </span>
           <span>
-            <span className="font-bold">Vendor: </span> {vendor.name}
+            <span>Vendor: </span> <b>{vendor.name}</b>
           </span>
         </div>
       </div>

@@ -25,7 +25,7 @@ const OrdersPage = () => {
       await axios.get('/api/profile').then((res: AxiosResponse) => {
         const userData = res.data;
         setRole(userData?.role);
-        setIsLoading(false);
+        // setIsLoading(false);
       });
     } catch (error) {
       console.log(error);
@@ -74,8 +74,8 @@ const OrdersPage = () => {
 
   useEffect(() => {
     getCurrentUser();
-    getOrders();
-  }, [getOrders, getCurrentUser]);
+    role && getOrders();
+  }, [getOrders, getCurrentUser, role]);
 
   if (isLoading) {
     return <Loader />;
@@ -83,19 +83,49 @@ const OrdersPage = () => {
 
   return (
     <Container>
-      <div className="mt-8 max-w-6xl mx-auto flex flex-col items-center h-[70vh]">
+      <div className="mt-4 md:mt-8 max-w-6xl mx-auto flex flex-col items-center h-[70vh]">
         <UserTabs role={role} />
-        <div className="w-[80%] mt-8 overflow-y-auto">
+        <div className="w-full md:w-[80%] mt-4 md:mt-8 overflow-y-auto">
           {/* Map Orders */}
           {Array.isArray(orders) && orders.length > 0 && (
             <table className="bg-white border">
               <tr className="text-left">
                 <th className="py-2 px-2 border-b border-r">s/n</th>
-                <th className="py-2 px-2 border-b border-r">Reference</th>
-                <th className="py-2 px-2 border-b border-r">Name</th>
-                <th className="py-2 px-2 border-b border-r">Email</th>
-                <th className="py-2 px-2 border-b border-r">Phone</th>
-                <th className="py-2 px-2 border-b border-r">Address</th>
+                <th
+                  className={`py-2 px-2 border-b border-r ${
+                    role !== 'VENDOR' && ' hidden'
+                  }`}
+                >
+                  Reference
+                </th>
+                <th
+                  className={`py-2 px-2 border-b border-r ${
+                    role !== 'VENDOR' && ' hidden'
+                  }`}
+                >
+                  Name
+                </th>
+                <th
+                  className={`py-2 px-2 border-b border-r ${
+                    role !== 'VENDOR' && ' hidden'
+                  }`}
+                >
+                  Email
+                </th>
+                <th
+                  className={`py-2 px-2 border-b border-r ${
+                    role !== 'VENDOR' && ' hidden'
+                  }`}
+                >
+                  Phone
+                </th>
+                <th
+                  className={`py-2 px-2 border-b border-r ${
+                    role !== 'VENDOR' && ' hidden'
+                  }`}
+                >
+                  Address
+                </th>
                 <th className="py-2 px-2 border-b border-r">Products</th>
                 <th className="py-2 px-2 border-b border-r">Amount(₦)</th>
                 <th className="py-2 px-2 border-b border-r">Status</th>
@@ -108,15 +138,39 @@ const OrdersPage = () => {
                   key={order.id}
                 >
                   <td className="py-2 px-2 border-b border-r">{idx + 1}</td>
-                  <td className="py-2 px-2 border-b border-r">
+                  <td
+                    className={`py-2 px-2 border-b border-r ${
+                      role !== 'VENDOR' && ' hidden'
+                    }`}
+                  >
                     {order.reference}
                   </td>
-                  <td className="py-2 px-2 border-b border-r">{order.name}</td>
-                  <td className="py-2 px-2 border-b border-r">{order.email}</td>
-                  <td className="py-2 px-2 border-b border-r">
+                  <td
+                    className={`py-2 px-2 border-b border-r ${
+                      role !== 'VENDOR' && ' hidden'
+                    }`}
+                  >
+                    {order.name}
+                  </td>
+                  <td
+                    className={`py-2 px-2 border-b border-r ${
+                      role !== 'VENDOR' && ' hidden'
+                    }`}
+                  >
+                    {order.email}
+                  </td>
+                  <td
+                    className={`py-2 px-2 border-b border-r ${
+                      role !== 'VENDOR' && ' hidden'
+                    }`}
+                  >
                     {order.phoneNumber}
                   </td>
-                  <td className="py-2 px-2 border-b border-r">
+                  <td
+                    className={`py-2 px-2 border-b border-r ${
+                      role !== 'VENDOR' && ' hidden'
+                    }`}
+                  >
                     {order.address}
                   </td>
                   <td className="py-2 px-2 border-b border-r">

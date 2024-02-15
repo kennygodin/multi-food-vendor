@@ -3,14 +3,13 @@
 import { useCallback, useEffect, useState } from 'react';
 import axios, { AxiosResponse } from 'axios';
 import { useParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
+import { toast } from 'react-hot-toast';
 
 import Container from '@/components/Container';
 import MenuInput from '@/components/menu/MenuInput';
 import UserTabs from '@/components/user/UserTabs';
 import Loader from '@/components/Loader';
-import { MenuItem } from '@prisma/client';
-import { useRouter } from 'next/navigation';
-import toast from 'react-hot-toast';
 
 const MenuItemPage = () => {
   const itemId = useParams<{ id: string }>();
@@ -97,9 +96,9 @@ const MenuItemPage = () => {
   }
   return (
     <Container>
-      <div className="max-w-3xl mx-auto mt-8 flex flex-col items-center">
+      <div className="max-w-3xl mx-auto mt-4 md:mt-8 flex flex-col items-center">
         <UserTabs role={'VENDOR'} />
-        <div className="w-[80%] mt-8 bg-neutral-200 p-10 rounded-lg">
+        <div className="w-full md:w-[80%] mt-4 md:mt-8 bg-neutral-200 p-5 md:p-10 rounded-lg">
           <MenuInput
             image={image}
             menuItemName={menuItemName}

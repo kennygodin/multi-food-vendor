@@ -122,9 +122,9 @@ const CategoriesPage = () => {
   return (
     <Container>
       {!isLoading && (
-        <div className="max-w-3xl mx-auto mt-8 flex flex-col items-center">
+        <div className="max-w-3xl mx-auto mt-4 md:mt-8 flex flex-col items-center">
           <UserTabs role={role} />
-          <div className="w-[80%] mt-8 bg-neutral-200 p-10 rounded-lg">
+          <div className="w-full md:w-[80%] p-5 mt-4 md:mt-8 bg-neutral-200 md:p-10 rounded-lg">
             <div className="flex gap-3">
               <Input
                 id="category"
