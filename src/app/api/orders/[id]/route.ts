@@ -9,6 +9,7 @@ export async function PUT(
   try {
     const currentUser = await getCurrentUser();
 
+    // Check if user is not authenticated or is not a VENDOR
     if (!currentUser || currentUser.role !== 'VENDOR') {
       return NextResponse.error();
     }
@@ -23,7 +24,11 @@ export async function PUT(
       data: { status },
     });
 
-    return NextResponse.json(updatedOrder);
+    if (updatedOrder) {
+      return NextResponse.json(updatedOrder);
+    } else {
+      return NextResponse.error();
+    }
   } catch (error) {
     console.error(error);
     return NextResponse.error();
