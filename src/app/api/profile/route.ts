@@ -28,18 +28,24 @@ export async function PUT(req: Request) {
     country,
     postalCode,
   } = body;
-  const updatedUser = await prisma.user.update({
-    where: { email },
-    data: {
-      name,
-      image,
-      phoneNumber,
-      address,
-      state,
-      country,
-      postalCode,
-    },
-  });
 
-  return NextResponse.json({ updatedUser });
+  try {
+    const updatedUser = await prisma.user.update({
+      where: { email },
+      data: {
+        name,
+        image,
+        phoneNumber,
+        address,
+        state,
+        country,
+        postalCode,
+      },
+    });
+
+    return NextResponse.json(updatedUser);
+  } catch (error) {
+    console.error(error);
+    return NextResponse.error();
+  }
 }

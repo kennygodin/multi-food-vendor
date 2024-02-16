@@ -8,10 +8,10 @@ export async function POST(req: Request) {
 
   const currentUser = await getCurrentUser();
   if (!currentUser) {
-    return null;
+    return NextResponse.error();
   }
 
-  if (currentUser && currentUser.role !== 'VENDOR') {
+  if (currentUser.role !== 'VENDOR') {
     return NextResponse.error();
   }
 
@@ -28,6 +28,7 @@ export async function POST(req: Request) {
     });
     return NextResponse.json(menuItem, { status: 201 });
   } catch (error) {
+    console.error('Error creating menu item:', error);
     return NextResponse.error();
   }
 }
@@ -38,7 +39,8 @@ export async function GET() {
   if (!currentUser) {
     return NextResponse.error();
   }
-  if (currentUser && currentUser.role !== 'VENDOR') {
+
+  if (currentUser.role !== 'VENDOR') {
     return NextResponse.error();
   }
 
@@ -59,12 +61,9 @@ export async function GET() {
       },
     });
 
-    if (!menuItems) {
-      return NextResponse.json([]);
-    }
-
-    return NextResponse.json(menuItems);
+    return NextResponse.json(menuItems || []);
   } catch (error) {
+    console.error('Error fetching menu items:', error);
     return NextResponse.error();
   }
 }

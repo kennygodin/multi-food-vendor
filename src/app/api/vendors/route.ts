@@ -11,12 +11,10 @@ export async function GET(req: Request) {
         createdAt: 'desc',
       },
     });
-    if (!vendors) {
-      return NextResponse.json([]);
-    }
 
-    return NextResponse.json(vendors);
+    return NextResponse.json(vendors || []);
   } catch (error) {
+    console.error(error);
     return NextResponse.error();
   }
 }

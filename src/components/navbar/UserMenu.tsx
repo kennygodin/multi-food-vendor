@@ -2,7 +2,6 @@
 
 import { useCallback, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { BsCart } from 'react-icons/bs';
 import { signOut, useSession } from 'next-auth/react';
 import { useCartStore } from '@/utils/store';
 
@@ -35,7 +34,10 @@ const UserMenu = () => {
           <Avatar image={image} />
         </div>
         {totalItems > 0 && (
-          <Link href="/cart" className="flex gap-1 items-center">
+          <Link
+            href={status === 'unauthenticated' ? '/login' : '/cart'}
+            className="flex gap-1 items-center"
+          >
             <span>Cart&nbsp;({totalItems})</span>
           </Link>
         )}

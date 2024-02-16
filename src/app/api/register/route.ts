@@ -6,7 +6,7 @@ import prisma from '@/utils/prismadb';
 export async function POST(req: Request) {
   const body = await req.json();
   const { token } = body;
-  const cookieToken = cookies().get('jwt_token')?.value;
+  const cookieToken = cookies()?.get('jwt_token')?.value;
 
   if (!cookieToken || !token) {
     return NextResponse.json('Tokens not found!', { status: 404 });
@@ -17,7 +17,6 @@ export async function POST(req: Request) {
       cookieToken,
       process.env.JWT_SECRET as string
     ) as JwtPayload;
-    // return NextResponse.json(decode);
 
     if (decode.emailString !== token) {
       return NextResponse.json('Token mismatch!', { status: 400 });
@@ -30,7 +29,7 @@ export async function POST(req: Request) {
     });
 
     if (userExists) {
-      return NextResponse.json('Email already registered');
+      return NextResponse.json('Email already registered', { status: 409 });
     }
 
     try {
@@ -44,8 +43,9 @@ export async function POST(req: Request) {
       });
 
       return NextResponse.json('User has been created', { status: 201 });
-    } catch (error: any) {
-      return NextResponse.json('User has been created');
+    } catch (error) {
+      console.error(error);
+      return NextResponse.error();
     }
   } catch (error) {
     return NextResponse.json('Invalid token!', { status: 404 });

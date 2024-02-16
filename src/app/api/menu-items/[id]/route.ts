@@ -7,10 +7,9 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   const id = params.id;
-  const currentUser = await getCurrentUser();
 
-  if (id === 'featured-items') {
-    try {
+  try {
+    if (id === 'featured-items') {
       const menuItems = await prisma.menuItem.findMany({
         orderBy: {
           createdAt: 'desc',
@@ -23,33 +22,24 @@ export async function GET(
           },
         },
       });
-      if (!menuItems) {
-        return NextResponse.json({});
-      }
-      return NextResponse.json(menuItems);
-    } catch (error) {
-      return NextResponse.error();
-    }
-  } else {
-    if (!currentUser) {
-      return null;
-    }
-    if (currentUser && currentUser.role !== 'VENDOR') {
-      return NextResponse.error();
-    }
 
-    try {
-      const menuItems = await prisma.menuItem.findUnique({
+      return NextResponse.json(menuItems || []);
+    } else {
+      const currentUser = await getCurrentUser();
+
+      if (!currentUser || currentUser.role !== 'VENDOR') {
+        return NextResponse.error();
+      }
+
+      const menuItem = await prisma.menuItem.findUnique({
         where: { id },
       });
 
-      if (!menuItems) {
-        return NextResponse.json({});
-      }
-      return NextResponse.json(menuItems);
-    } catch (error) {
-      return NextResponse.error();
+      return NextResponse.json(menuItem || []);
     }
+  } catch (error) {
+    console.error(error);
+    return NextResponse.error();
   }
 }
 
@@ -59,17 +49,15 @@ export async function PUT(
 ) {
   const body = await req.json();
   const { menuItemName, description, price, image, categoryId } = body;
-
-  const currentUser = await getCurrentUser();
-  if (!currentUser) {
-    return null;
-  }
-  if (currentUser && currentUser.role !== 'VENDOR') {
-    return NextResponse.error();
-  }
   const id = params.id;
 
   try {
+    const currentUser = await getCurrentUser();
+
+    if (!currentUser || currentUser.role !== 'VENDOR') {
+      return NextResponse.error();
+    }
+
     const updatedMenuItem = await prisma.menuItem.update({
       where: { id },
       data: {
@@ -87,6 +75,7 @@ export async function PUT(
 
     return NextResponse.json(updatedMenuItem);
   } catch (error) {
+    console.error(error);
     return NextResponse.error();
   }
 }

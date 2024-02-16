@@ -9,10 +9,10 @@ export async function POST(req: Request) {
   const currentUser = await getCurrentUser();
 
   if (!currentUser) {
-    return null;
+    return NextResponse.error();
   }
 
-  if (currentUser && currentUser.role !== 'VENDOR') {
+  if (currentUser.role !== 'VENDOR') {
     return NextResponse.error();
   }
 
@@ -20,12 +20,13 @@ export async function POST(req: Request) {
     const category = await prisma.category.create({
       data: {
         categoryName,
-        userId: currentUser?.id,
+        userId: currentUser.id,
       },
     });
 
     return NextResponse.json(category, { status: 201 });
   } catch (error) {
+    console.error('Error creating category:', error);
     return NextResponse.error();
   }
 }
@@ -34,23 +35,24 @@ export async function GET(req: Request) {
   const currentUser = await getCurrentUser();
 
   if (!currentUser) {
-    return null;
+    return NextResponse.error();
   }
 
-  if (currentUser && currentUser.role !== 'VENDOR') {
+  if (currentUser.role !== 'VENDOR') {
     return NextResponse.json([]);
   }
 
-  const category = await prisma.category.findMany({
-    where: { userId: currentUser.id },
-    orderBy: {
-      createdAt: 'desc',
-    },
-  });
+  try {
+    const categories = await prisma.category.findMany({
+      where: { userId: currentUser.id },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
 
-  if (!category) {
-    return NextResponse.json(null);
+    return NextResponse.json(categories);
+  } catch (error) {
+    console.error('Error fetching categories:', error);
+    return NextResponse.error();
   }
-
-  return NextResponse.json(category);
 }

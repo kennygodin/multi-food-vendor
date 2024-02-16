@@ -83,7 +83,12 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({
       </div>
       <div>
         <label className=" text-sm">State</label>
-        <Input id="state" label="State" value={state} onChange={setState} />
+        <Input
+          id="state"
+          label="State"
+          value={state}
+          onChange={(e: any) => setState(e.target.value)}
+        />
       </div>
 
       <div className="flex gap-2">

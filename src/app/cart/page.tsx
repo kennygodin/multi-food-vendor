@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useCallback, useEffect, useState } from 'react';
+import { useSession } from 'next-auth/react';
 import axios, { AxiosResponse } from 'axios';
 import { PaystackButton } from 'react-paystack';
 import { toast } from 'react-hot-toast';
@@ -18,6 +19,7 @@ const CartPage = () => {
   const { cartProducts, removeFromCart, totalItems, totalPrice, clearCart } =
     useCartStore();
   const router = useRouter();
+  const { status } = useSession();
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -86,6 +88,9 @@ const CartPage = () => {
 
   const getCurrentUser = useCallback(async () => {
     setIsLoading(true);
+    if (status === 'unauthenticated') {
+      return router.push('/login');
+    }
     try {
       await axios.get('/api/profile').then((res: AxiosResponse) => {
         const userData = res.data;

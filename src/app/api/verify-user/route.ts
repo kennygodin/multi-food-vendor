@@ -7,45 +7,45 @@ import { generateToken } from '@/utils/generateToken';
 import { User } from '@prisma/client';
 
 export async function POST(req: Request) {
-  const body = await req.json();
-  const { name, email, role, password } = body;
-
-  // user exists
-  const userExists = await prisma.user.findUnique({
-    where: {
-      email,
-    },
-  });
-
-  if (userExists) {
-    return NextResponse.json('Email already registered!');
-  }
-
-  const hashedPassword = await bcrypt.hash(password, 10);
-  const userData: User | any = {
-    name,
-    email,
-    password: hashedPassword,
-    role,
-  };
-
-  // generate token
-  const token = generateToken(userData);
-  const frontendUrl = process.env.FRONTEND_URL;
-  const emailUrl = `${frontendUrl}verify-user?token=${token.emailString}`;
-
-  // console.log(emailUrl);
-  const subject = 'Welcome to FoodTroops - Verify Your Email Address';
   try {
+    const body = await req.json();
+    const { name, email, role, password } = body;
+
+    // Check if the user already exists
+    const userExists = await prisma.user.findUnique({
+      where: {
+        email,
+      },
+    });
+
+    if (userExists) {
+      return NextResponse.json('Email already registered!', { status: 400 });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const userData: User | any = {
+      name,
+      email,
+      password: hashedPassword,
+      role,
+    };
+
+    // Generate token
+    const token = generateToken(userData);
+    const frontendUrl = process.env.FRONTEND_URL;
+    const emailUrl = `${frontendUrl}verify-user?token=${token.emailString}`;
+
+    const subject = 'Welcome to FoodTroops - Verify Your Email Address';
     await sendEmail({
       to: email,
       name,
       subject,
       body: compileVerifyTemplate(name, emailUrl),
     });
-  } catch (error) {
-    console.log(error);
-  }
 
-  return NextResponse.json('Email sent successfully');
+    return NextResponse.json('Email sent successfully');
+  } catch (error) {
+    console.error(error);
+    return NextResponse.error();
+  }
 }

@@ -1,26 +1,12 @@
 import getCurrentUser from '@/actions/getCurrentUser';
 import prisma from '@/utils/prismadb';
-import { MenuItem } from '@prisma/client';
 import axios from 'axios';
 import { NextResponse } from 'next/server';
-
-type OrderWithCartProducts = {
-  id: string;
-  name: string;
-  email: string;
-  phoneNumber: string;
-  address: string;
-  state: string;
-  country: string;
-  postalCode: string;
-  cartProducts: MenuItem[];
-  reference: string;
-};
 
 export async function POST(req: Request) {
   const currentUser = await getCurrentUser();
   if (!currentUser) {
-    return null;
+    return NextResponse.error();
   }
 
   const body = await req.json();
@@ -59,6 +45,7 @@ export async function POST(req: Request) {
         },
       }
     );
+
     // Create an order
     const data = res.data?.data;
     if (data.status === 'success') {
@@ -79,12 +66,13 @@ export async function POST(req: Request) {
           userId: currentUser.id,
         },
       });
+
       return NextResponse.json('Your order has been placed.');
     } else {
       return NextResponse.error();
     }
   } catch (error) {
-    console.error(error);
+    console.error('Error placing order:', error);
     return NextResponse.error();
   }
 }
@@ -92,22 +80,24 @@ export async function POST(req: Request) {
 export async function GET(req: Request) {
   const currentUser = await getCurrentUser();
   if (!currentUser) {
-    return null;
+    return NextResponse.error();
   }
+
   const url = new URL(req.url);
   const role = url.searchParams.get('role');
 
   let orders;
+
   if (role === 'VENDOR') {
     const allOrders = await prisma.order.findMany({});
     orders = allOrders.filter((order) => {
       if (Array.isArray(order.cartProducts)) {
-        return order.cartProducts.some((cartProduct) => {
-          const productWithUserId = cartProduct as { userId: string };
-          return productWithUserId?.userId === currentUser.id;
-        });
+        return order.cartProducts.some(
+          (cartProduct) =>
+            (cartProduct as { userId: string })?.userId === currentUser.id
+        );
       }
-      return NextResponse.json('You have not received any order.');
+      return false;
     });
   }
 
