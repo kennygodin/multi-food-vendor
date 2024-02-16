@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server';
 export async function PUT(
   req: Request,
   { params }: { params: { id: string } }
-): Promise<void | Response | null> {
+) {
   try {
     const currentUser = await getCurrentUser();
 
@@ -24,11 +24,11 @@ export async function PUT(
       data: { status },
     });
 
-    if (updatedOrder) {
-      return NextResponse.json(updatedOrder);
-    } else {
+    if (!updatedOrder) {
       return NextResponse.error();
     }
+
+    return NextResponse.json(updatedOrder);
   } catch (error) {
     console.error(error);
     return NextResponse.error();
