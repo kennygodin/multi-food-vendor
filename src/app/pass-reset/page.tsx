@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 import axios, { AxiosResponse } from 'axios';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'react-hot-toast';
@@ -130,7 +130,7 @@ const PasswordReset = () => {
               onClick={() => router.push('/login')}
               disabled={isLoading}
             />
-          )}{' '}
+          )}
         </div>
       </div>
     </Container>
